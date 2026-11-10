@@ -1,0 +1,125 @@
+{
+  "dataset_name": "企业客服助手评测数据集",
+  "version": "1.0.0",
+  "description": "面向 RAG 客服助手的分层评测数据集，覆盖黄金集、边界集、对抗集",
+  "fields": {
+    "id": {
+      "type": "string",
+      "required": true,
+      "description": "全局唯一 ID，格式：{type}_{seq}，如 gs_001、adv_001、edge_001",
+      "pattern": "^(gs|adv|edge)_\\d{3}$"
+    },
+    "type": {
+      "type": "string",
+      "required": true,
+      "enum": ["golden", "adversarial", "edge"],
+      "description": "数据集类型：golden=黄金集，adversarial=对抗集，edge=边界集"
+    },
+    "category": {
+      "type": "string",
+      "required": true,
+      "description": "问题分类，如：产品咨询、退款政策、物流查询、账户安全、功能使用"
+    },
+    "difficulty": {
+      "type": "string",
+      "required": true,
+      "enum": ["easy", "medium", "hard"],
+      "description": "难度等级：easy=直接命中知识库，medium=需要推理组合，hard=知识库无直接答案"
+    },
+    "question": {
+      "type": "string",
+      "required": true,
+      "description": "用户问题"
+    },
+    "ground_truth": {
+      "type": "string",
+      "required": false,
+      "description": "黄金答案（事实要点，非范文），黄金集必填，对抗集可选",
+      "note": "应拆成 3-5 个关键事实点，便于评测覆盖度"
+    },
+    "ground_truth_points": {
+      "type": "array",
+      "required": false,
+      "items": {"type": "string"},
+      "description": "黄金答案的事实要点列表，评测时判断答案是否覆盖"
+    },
+    "context": {
+      "type": "array",
+      "required": false,
+      "items": {"type": "string"},
+      "description": "关联的知识库上下文片段（用于计算忠实度/上下文召回）"
+    },
+    "tags": {
+      "type": "array",
+      "required": false,
+      "items": {"type": "string"},
+      "description": "标签列表，便于筛选和统计"
+    },
+    "source": {
+      "type": "string",
+      "required": false,
+      "description": "数据来源，如：线上工单 #12345、业务专家、文档反推"
+    },
+    "expected_behavior": {
+      "type": "string",
+      "required": false,
+      "description": "对抗集/边界集必填：期望的行为描述"
+    },
+    "assertion": {
+      "type": "string",
+      "required": false,
+      "enum": [
+        "must_contain_any",
+        "must_not_contain",
+        "must_contain_all",
+        "status_code",
+        "len_gt",
+        "len_lt",
+        "is_json",
+        "contains_keyword"
+      ],
+      "description": "断言类型"
+    },
+    "assertion_value": {
+      "type": ["string", "array", "number"],
+      "required": false,
+      "description": "断言期望值，类型与 assertion 对应"
+    },
+    "created_at": {
+      "type": "string",
+      "required": true,
+      "format": "date",
+      "description": "创建日期 YYYY-MM-DD"
+    },
+    "last_verified": {
+      "type": "string",
+      "required": false,
+      "format": "date",
+      "description": "最后验证日期"
+    }
+  },
+  "dataset_types": {
+    "golden": {
+      "description": "黄金集：高质量标准答案，用于衡量核心能力",
+      "required_fields": ["id", "type", "category", "difficulty", "question", "ground_truth", "created_at"],
+      "recommended_count": 50
+    },
+    "adversarial": {
+      "description": "对抗集：诱导幻觉、提示注入、安全攻击",
+      "required_fields": ["id", "type", "category", "question", "expected_behavior", "assertion", "assertion_value", "created_at"],
+      "recommended_count": 20
+    },
+    "edge": {
+      "description": "边界集：空输入、超长输入、歧义输入、多轮对话",
+      "required_fields": ["id", "type", "category", "question", "expected_behavior", "assertion", "assertion_value", "created_at"],
+      "recommended_count": 15
+    }
+  },
+  "quality_checklist": [
+    {"item": "ID 唯一性", "rule": "所有 ID 不重复", "command": "python datasets/quality_check.py --check unique_ids"},
+    {"item": "必填字段完整性", "rule": "必填字段无空值", "command": "python datasets/quality_check.py --check required_fields"},
+    {"item": "标注一致性", "rule": "difficulty 与 ground_truth 长度匹配（hard 应含推理步骤）", "command": "python datasets/quality_check.py --check consistency"},
+    {"item": "数量达标", "rule": "golden>=50, adversarial>=20, edge>=15", "command": "python datasets/quality_check.py --check count"},
+    {"item": "答案非范文", "rule": "ground_truth 长度 < 200 字，为事实要点", "command": "python datasets/quality_check.py --check ground_truth_length"}
+  ]
+}
