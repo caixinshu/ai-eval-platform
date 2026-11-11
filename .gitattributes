@@ -1,0 +1,32 @@
+# 统一行尾策略：所有文本文件在仓库内存储为 LF
+# 检出时自动转换为本机行尾（由 core.autocrlf 控制）
+
+# 默认：所有文件视为文本，提交时归一为 LF
+* text=auto
+
+# 代码/文档/配置：强制 LF（跨平台一致）
+*.py        text eol=lf
+*.md        text eol=lf
+*.json      text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf
+*.toml      text eol=lf
+*.cfg       text eol=lf
+*.ini       text eol=lf
+*.txt       text eol=lf
+*.sh        text eol=lf
+
+# Windows 脚本：保留 CRLF
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+*.ps1       text eol=crlf
+
+# 二进制文件：不做行尾转换
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.pdf       binary
+*.zip       binary
+*.gz        binary
