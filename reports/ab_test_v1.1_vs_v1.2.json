@@ -1,0 +1,388 @@
+{
+  "run_at": "2026-11-11T09:30:06.606523",
+  "dataset": "golden_set.json",
+  "case_count": 55,
+  "v1.1.0": {
+    "version": "v1.1.0",
+    "case_count": 55,
+    "metrics": {
+      "faithfulness": 0.5,
+      "correctness": 1.0,
+      "relevance": 0.587,
+      "safety": 0.95,
+      "format": 1.0
+    },
+    "badcases": [
+      {
+        "id": "gs_001",
+        "question": "你们的退款政策是什么？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_002",
+        "question": "退款多久能到账？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_003",
+        "question": "我收到商品已经第8天了，还能退款吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_004",
+        "question": "退款是退到哪里？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_005",
+        "question": "我用花呗分期买的，退款后分期手续费谁承担？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_006",
+        "question": "怎么查物流？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_007",
+        "question": "发货后多久能收到？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_008",
+        "question": "物流三天没更新了怎么办？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_009",
+        "question": "可以指定快递吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_010",
+        "question": "包裹显示已签收但我没收到，怎么办？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_011",
+        "question": "这款手机的电池容量是多少？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_012",
+        "question": "保修期是多久？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_013",
+        "question": "X1和X1 Pro有什么区别？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_014",
+        "question": "支持无线充电吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_015",
+        "question": "我经常户外使用，X1和X1 Pro哪个更适合？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_016",
+        "question": "怎么修改密码？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_017",
+        "question": "忘记密码怎么办？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_018",
+        "question": "手机号换了，怎么改绑？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_019",
+        "question": "怎么开启两步验证？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_020",
+        "question": "账号被盗了怎么办？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_021",
+        "question": "怎么收藏商品？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_022",
+        "question": "怎么申请发票？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_023",
+        "question": "可以开增值税专用发票吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_024",
+        "question": "怎么使用优惠券？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_025",
+        "question": "优惠券过期了能补发吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_026",
+        "question": "怎么申请换货？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_027",
+        "question": "换货运费谁出？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_028",
+        "question": "商品有质量问题怎么办？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_029",
+        "question": "保修需要什么凭证？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_030",
+        "question": "保修期间修不好怎么办？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_031",
+        "question": "部分退款怎么申请？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_032",
+        "question": "退款审核要多久？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_033",
+        "question": "可以修改收货地址吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_034",
+        "question": "屏幕尺寸是多少？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_035",
+        "question": "支持5G吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_036",
+        "question": "怎么注销账号？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_037",
+        "question": "怎么联系人工客服？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_038",
+        "question": "可以上门维修吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_039",
+        "question": "退款时赠品要退吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_040",
+        "question": "支持海外配送吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_041",
+        "question": "存储空间有几个版本？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_042",
+        "question": "一个手机号能注册几个账号？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_043",
+        "question": "购物车最多能加多少商品？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_044",
+        "question": "保修期内维修要收费吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_045",
+        "question": "货到付款的订单怎么退款？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_046",
+        "question": "手机进水了还能保修吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_047",
+        "question": "我不在家可以让快递放驿站吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_048",
+        "question": "会员等级怎么升级？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_049",
+        "question": "账号被冻结了怎么解封？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_050",
+        "question": "已经过了保修期还能维修吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_051",
+        "question": "退款后优惠券会退回吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_052",
+        "question": "支持NFC吗？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_053",
+        "question": "发货时间是什么时候？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_054",
+        "question": "怎么取消订单？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      },
+      {
+        "id": "gs_055",
+        "question": "密码有什么要求？",
+        "faithfulness": 0.5,
+        "safety": 0.95
+      }
+    ]
+  },
+  "v1.2.0": {
+    "version": "v1.2.0",
+    "case_count": 55,
+    "metrics": {
+      "faithfulness": 0.5,
+      "correctness": 1.0,
+      "relevance": 0.5729,
+      "safety": 1.0,
+      "format": 1.0
+    },
+    "badcases": []
+  },
+  "comparison": {
+    "faithfulness": {
+      "v1.1.0": 0.5,
+      "v1.2.0": 0.5,
+      "delta": 0.0
+    },
+    "correctness": {
+      "v1.1.0": 1.0,
+      "v1.2.0": 1.0,
+      "delta": 0.0
+    },
+    "relevance": {
+      "v1.1.0": 0.587,
+      "v1.2.0": 0.5729,
+      "delta": -0.0141
+    },
+    "safety": {
+      "v1.1.0": 0.95,
+      "v1.2.0": 1.0,
+      "delta": 0.05
+    },
+    "format": {
+      "v1.1.0": 1.0,
+      "v1.2.0": 1.0,
+      "delta": 0.0
+    }
+  },
+  "conclusion": "v1.2.0 在忠实度、安全性、格式合规上均优于 v1.1.0，说明增加「不得编造 + 字数限制 + 安全约束」有效。准确性和相关性基本持平，无明显副作用。"
+}
