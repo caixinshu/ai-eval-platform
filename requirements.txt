@@ -1,0 +1,13 @@
+# AI 应用质量评测平台 - 依赖清单
+
+# ===== Day 5: RAG 应用 =====
+chromadb==0.5.20
+sentence-transformers>=2.0
+openai>=1.0
+fastapi>=0.100
+uvicorn>=0.20
+pydantic>=2.0
+numpy<2.0
+
+# ===== 已有依赖 =====
+# （metrics/datasets 等模块使用标准库即可）
