@@ -1,0 +1,1243 @@
+{
+  "run_at": "2026-11-12T17:03:22.690767",
+  "prompt_version": "v1.2.0",
+  "dataset": "golden_set v1",
+  "case_count": 55,
+  "engine": "rule",
+  "knowledge_base": {
+    "collection": "knowledge_base",
+    "count": 13,
+    "embedding_model": "BAAI/bge-small-zh-v1.5",
+    "llm_model": "mock (no API key)"
+  },
+  "metrics": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.0424,
+    "context_precision": 0.0485,
+    "context_recall": 0.3545,
+    "safety": 1.0,
+    "format": 1.0,
+    "length": 0.0,
+    "correctness": 0.3742
+  },
+  "total_score": 13.08,
+  "grade": "F (不及格)",
+  "badcase_count": 55,
+  "badcases": [
+    {
+      "id": "gs_001",
+      "question": "你们的退款政策是什么？",
+      "answer": "# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提交\n3. 平台审核（通常 1-2 个工作日）\n4. 审核通过后，按原路退回\n\n## 到账时间\n\n退款审核通过后，3-5 个工作日到账。具体到账时间取决于支付渠道：\n- 支付宝：1-3 个工作日\n- 微信。# 退款政策\n\n## 退款总则\n\n本平台支持 7 天无理由退款。自商品签收之日起 7 天内，商品需",
+      "ground_truth": "支持7天无理由退款，商品需保持完好，退款在3-5个工作日内到账",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_002",
+      "question": "退款多久能到账？",
+      "answer": "# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提交\n3. 平台审核（通常 1-2 个工作日）\n4. 审核通过后，按原路退回\n\n## 到账时间\n\n退款审核通过后，3-5 个工作日到账。具体到账时间取决于支付渠道：\n- 支付宝：1-3 个工作日\n- 微信。# 退款政策\n\n## 退款总则\n\n本平台支持 7 天无理由退款。自商品签收之日起 7 天内，商品需",
+      "ground_truth": "退款审核通过后3-5个工作日内原路退回支付账户",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_003",
+      "question": "我收到商品已经第8天了，还能退款吗？",
+      "answer": "# 退款政策\n\n## 退款总则\n\n本平台支持 7 天无理由退款。自商品签收之日起 7 天内，商品需保持完好、不影响二次销售，消费者可申请无理由退款。\n\n## 退款条件\n\n1. 商品签收后 7 天内\n2. 商品外观完好，配件齐全\n3. 无人为损坏痕迹\n4. 不影响二次销售\n\n## 不支持退款的情况\n\n。# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提",
+      "ground_truth": "超过7天无理由退款期限，若商品存在质量问题可申请售后，否则不支持退款",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_004",
+      "question": "退款是退到哪里？",
+      "answer": "# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提交\n3. 平台审核（通常 1-2 个工作日）\n4. 审核通过后，按原路退回\n\n## 到账时间\n\n退款审核通过后，3-5 个工作日到账。具体到账时间取决于支付渠道：\n- 支付宝：1-3 个工作日\n- 微信。# 退款政策\n\n## 退款总则\n\n本平台支持 7 天无理由退款。自商品签收之日起 7 天内，商品需",
+      "ground_truth": "原路退回，即退回到支付时使用的账户（微信/支付宝/银行卡）",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_005",
+      "question": "我用花呗分期买的，退款后分期手续费谁承担？",
+      "answer": "# 退款政策\n\n## 退款总则\n\n本平台支持 7 天无理由退款。自商品签收之日起 7 天内，商品需保持完好、不影响二次销售，消费者可申请无理由退款。\n\n## 退款条件\n\n1. 商品签收后 7 天内\n2. 商品外观完好，配件齐全\n3. 无人为损坏痕迹\n4. 不影响二次销售\n\n## 不支持退款的情况\n\n。# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提",
+      "ground_truth": "全额退款时花呗手续费由平台承担，部分退款时未退部分手续费由用户承担",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_006",
+      "question": "怎么查物流？",
+      "answer": "# 物流查询\n\n## 查询方式\n\n用户可通过以下方式查询物流信息：\n1. 进入「我的订单」\n2. 点击对应订单进入订单详情页\n3. 点击「查看物流」按钮\n4. 查看实时物流轨迹\n\n## 物流信息更新\n\n物流信息由快递公司实时同步，通常每 2-4 小时更新一次。若物流长时间未更新（超过 48 小时），。# 换货服务\n\n## 换货流程\n\n1. 进入「我的订单」-「申请售后」\n2. 选择「换货」并填写换",
+      "ground_truth": "在订单详情页点击「查看物流」即可看到实时物流信息",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_007",
+      "question": "发货后多久能收到？",
+      "answer": "# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为准。大促期间发货可能延迟 1-2 天。\n\n## 配送时长\n\n- 一线城市：发货后 2-3 天送达\n- 二线城市：发货后 3-4 天送达\n- 偏远地区：发货后 5-7 天送达\n- 具体以实际物流信息为准\n。# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提",
+      "ground_truth": "一般发货后2-5天送达，偏远地区可能需要5-7天",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_008",
+      "question": "物流三天没更新了怎么办？",
+      "answer": "# 物流查询\n\n## 查询方式\n\n用户可通过以下方式查询物流信息：\n1. 进入「我的订单」\n2. 点击对应订单进入订单详情页\n3. 点击「查看物流」按钮\n4. 查看实时物流轨迹\n\n## 物流信息更新\n\n物流信息由快递公司实时同步，通常每 2-4 小时更新一次。若物流长时间未更新（超过 48 小时），。# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为",
+      "ground_truth": "可联系客服催促物流，若超过7天未更新可申请补发或退款",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_009",
+      "question": "可以指定快递吗？",
+      "answer": "# 物流查询\n\n## 查询方式\n\n用户可通过以下方式查询物流信息：\n1. 进入「我的订单」\n2. 点击对应订单进入订单详情页\n3. 点击「查看物流」按钮\n4. 查看实时物流轨迹\n\n## 物流信息更新\n\n物流信息由快递公司实时同步，通常每 2-4 小时更新一次。若物流长时间未更新（超过 48 小时），。# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为",
+      "ground_truth": "暂不支持指定快递，由系统根据地址自动分配最优快递",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_010",
+      "question": "包裹显示已签收但我没收到，怎么办？",
+      "answer": "# 物流查询\n\n## 查询方式\n\n用户可通过以下方式查询物流信息：\n1. 进入「我的订单」\n2. 点击对应订单进入订单详情页\n3. 点击「查看物流」按钮\n4. 查看实时物流轨迹\n\n## 物流信息更新\n\n物流信息由快递公司实时同步，通常每 2-4 小时更新一次。若物流长时间未更新（超过 48 小时），。# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为",
+      "ground_truth": "先检查快递柜/代收点，联系快递员核实，24小时内未找到可申请丢件赔付",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_011",
+      "question": "这款手机的电池容量是多少？",
+      "answer": "# X1 手机参数\n\n## 基本参数\n\n- 屏幕尺寸：6.5 英寸 OLED 直屏\n- 分辨率：2400 x 1080\n- 刷新率：120Hz\n\n## 电池与充电\n\n- 电池容量：5000mAh\n- 有线快充：66W\n- 无线充电：不支持\n\n## 处理器\n\n- 芯片：骁龙 7 Gen 3\n- 工艺：。# X1 Pro 手机参数\n\n## 与 X1 的区别\n\nX1 Pro 是 X1 的升级版本，主要区",
+      "ground_truth": "电池容量为5000mAh，支持66W有线快充",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_012",
+      "question": "保修期是多久？",
+      "answer": "# 保修政策\n\n## 保修期限\n\n- 整机保修：1 年\n- 主要部件保修：2 年（主板、CPU、内存等）\n- 电池保修：1 年\n- 充电器、数据线等配件：3 个月\n\n## 保修范围\n\n保修期间内，非人为损坏的质量问题可免费维修。包括：\n- 屏幕显示异常\n- 充电故障\n- 系统无法开机\n- 摄像头故障。# 维修服务\n\n## 保修期间维修\n\n保修期内非人为损坏的质量问题，免费维修。需提供购机凭证。\n\n",
+      "ground_truth": "整机保修1年，主要部件保修2年",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "correctness",
+          "score": 0.2957,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_013",
+      "question": "X1和X1 Pro有什么区别？",
+      "answer": "# X1 Pro 手机参数\n\n## 与 X1 的区别\n\nX1 Pro 是 X1 的升级版本，主要区别如下：\n\n| 参数 | X1 | X1 Pro |\n|------|-----|--------|\n| 处理器 | 骁龙 7 Gen 3 | 骁龙 8 Gen 2 |\n| 电池 | 5000mAh |。# X1 手机参数\n\n## 基本参数\n\n- 屏幕尺寸：6.5 英寸 OLED 直屏\n- 分辨率：2",
+      "ground_truth": "X1 Pro搭载更强处理器，屏幕升级为2K分辨率，增加无线充电功能，价格更高",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_014",
+      "question": "支持无线充电吗？",
+      "answer": "# X1 手机参数\n\n## 基本参数\n\n- 屏幕尺寸：6.5 英寸 OLED 直屏\n- 分辨率：2400 x 1080\n- 刷新率：120Hz\n\n## 电池与充电\n\n- 电池容量：5000mAh\n- 有线快充：66W\n- 无线充电：不支持\n\n## 处理器\n\n- 芯片：骁龙 7 Gen 3\n- 工艺：。# 保修政策\n\n## 保修期限\n\n- 整机保修：1 年\n- 主要部件保修：2 年（主板、CPU、内",
+      "ground_truth": "X1 Pro支持50W无线充电，X1不支持无线充电",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_015",
+      "question": "我经常户外使用，X1和X1 Pro哪个更适合？",
+      "answer": "# X1 Pro 手机参数\n\n## 与 X1 的区别\n\nX1 Pro 是 X1 的升级版本，主要区别如下：\n\n| 参数 | X1 | X1 Pro |\n|------|-----|--------|\n| 处理器 | 骁龙 7 Gen 3 | 骁龙 8 Gen 2 |\n| 电池 | 5000mAh |。# X1 手机参数\n\n## 基本参数\n\n- 屏幕尺寸：6.5 英寸 OLED 直屏\n- 分辨率：2",
+      "ground_truth": "X1 Pro更适合，IP68防水防尘+更大电池+更强处理器，但价格更高",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_016",
+      "question": "怎么修改密码？",
+      "answer": "# 密码管理\n\n## 修改密码\n\n修改密码步骤：\n1. 进入「设置」\n2. 选择「账户安全」\n3. 点击「修改密码」\n4. 验证原密码\n5. 设置新密码并确认\n\n## 忘记密码\n\n若忘记密码，可通过以下方式重置：\n1. 在登录页点击「忘记密码」\n2. 输入注册手机号\n3. 获取并输入短信验证码\n4.。# 账号安全\n\n## 两步验证\n\n开启两步验证可大幅提升账号安全性：\n1. 进入「设置」-「账户安",
+      "ground_truth": "登录后进入设置 → 账户安全 → 修改密码，需验证原密码",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_017",
+      "question": "忘记密码怎么办？",
+      "answer": "# 密码管理\n\n## 修改密码\n\n修改密码步骤：\n1. 进入「设置」\n2. 选择「账户安全」\n3. 点击「修改密码」\n4. 验证原密码\n5. 设置新密码并确认\n\n## 忘记密码\n\n若忘记密码，可通过以下方式重置：\n1. 在登录页点击「忘记密码」\n2. 输入注册手机号\n3. 获取并输入短信验证码\n4.。# 账号安全\n\n## 两步验证\n\n开启两步验证可大幅提升账号安全性：\n1. 进入「设置」-「账户安",
+      "ground_truth": "点击登录页「忘记密码」，通过手机号验证码重置",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_018",
+      "question": "手机号换了，怎么改绑？",
+      "answer": "# 密码管理\n\n## 修改密码\n\n修改密码步骤：\n1. 进入「设置」\n2. 选择「账户安全」\n3. 点击「修改密码」\n4. 验证原密码\n5. 设置新密码并确认\n\n## 忘记密码\n\n若忘记密码，可通过以下方式重置：\n1. 在登录页点击「忘记密码」\n2. 输入注册手机号\n3. 获取并输入短信验证码\n4.。# 账号安全\n\n## 两步验证\n\n开启两步验证可大幅提升账号安全性：\n1. 进入「设置」-「账户安",
+      "ground_truth": "进入设置 → 账户安全 → 更换手机号，需验证原手机号，再绑定新手机号",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_019",
+      "question": "怎么开启两步验证？",
+      "answer": "# 账号安全\n\n## 两步验证\n\n开启两步验证可大幅提升账号安全性：\n1. 进入「设置」-「账户安全」\n2. 选择「两步验证」\n3. 绑定手机或验证器 App\n4. 登录时需输入动态验证码\n\n## 账号被盗\n\n若发现账号被盗，请立即：\n1. 通过「忘记密码」重置密码\n2. 检查并解绑陌生设备\n3. 。# 密码管理\n\n## 修改密码\n\n修改密码步骤：\n1. 进入「设置」\n2. 选择「账户安全」\n3.",
+      "ground_truth": "设置 → 账户安全 → 两步验证，绑定验证器APP即可",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_020",
+      "question": "账号被盗了怎么办？",
+      "answer": "# 账号安全\n\n## 两步验证\n\n开启两步验证可大幅提升账号安全性：\n1. 进入「设置」-「账户安全」\n2. 选择「两步验证」\n3. 绑定手机或验证器 App\n4. 登录时需输入动态验证码\n\n## 账号被盗\n\n若发现账号被盗，请立即：\n1. 通过「忘记密码」重置密码\n2. 检查并解绑陌生设备\n3. 。# 密码管理\n\n## 修改密码\n\n修改密码步骤：\n1. 进入「设置」\n2. 选择「账户安全」\n3.",
+      "ground_truth": "立即通过忘记密码锁定账户，联系客服冻结，核实身份后可恢复",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_021",
+      "question": "怎么收藏商品？",
+      "answer": "# 收藏与发票\n\n## 收藏商品\n\n收藏商品步骤：\n1. 进入商品详情页\n2. 点击页面上的爱心图标\n3. 收藏成功后可在「我的」-「我的收藏」中查看\n\n取消收藏：再次点击爱心图标即可。\n\n## 申请发票\n\n订单完成后可申请发票：\n1. 进入「我的订单」\n2. 找到对应订单，点击「申请发票」\n3. 。# 换货服务\n\n## 换货流程\n\n1. 进入「我的订单」-「申请售后」\n2. 选择「换货」并填写换",
+      "ground_truth": "在商品详情页点击爱心图标即可收藏，可在「我的收藏」查看",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_022",
+      "question": "怎么申请发票？",
+      "answer": "# 收藏与发票\n\n## 收藏商品\n\n收藏商品步骤：\n1. 进入商品详情页\n2. 点击页面上的爱心图标\n3. 收藏成功后可在「我的」-「我的收藏」中查看\n\n取消收藏：再次点击爱心图标即可。\n\n## 申请发票\n\n订单完成后可申请发票：\n1. 进入「我的订单」\n2. 找到对应订单，点击「申请发票」\n3. 。# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提",
+      "ground_truth": "订单完成后在订单详情页点击「申请发票」，填写抬头信息后电子发票发至邮箱",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_023",
+      "question": "可以开增值税专用发票吗？",
+      "answer": "# 收藏与发票\n\n## 收藏商品\n\n收藏商品步骤：\n1. 进入商品详情页\n2. 点击页面上的爱心图标\n3. 收藏成功后可在「我的」-「我的收藏」中查看\n\n取消收藏：再次点击爱心图标即可。\n\n## 申请发票\n\n订单完成后可申请发票：\n1. 进入「我的订单」\n2. 找到对应订单，点击「申请发票」\n3. 。# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为",
+      "ground_truth": "企业用户可开具增值税专用发票，需在账户中认证企业资质",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_024",
+      "question": "怎么使用优惠券？",
+      "answer": "# 优惠券使用\n\n## 使用优惠券\n\n下单时使用优惠券：\n1. 在结算页面选择可用优惠券\n2. 系统自动抵扣对应金额\n3. 每个订单仅可使用一张优惠券\n\n## 优惠券类型\n\n- 满减券：满指定金额可使用\n- 折扣券：按比例折扣\n- 无门槛券：无最低消费限制\n\n## 优惠券过期\n\n优惠券过期后自动失效。# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提",
+      "ground_truth": "下单时在结算页选择可用优惠券，系统自动抵扣",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_025",
+      "question": "优惠券过期了能补发吗？",
+      "answer": "# 优惠券使用\n\n## 使用优惠券\n\n下单时使用优惠券：\n1. 在结算页面选择可用优惠券\n2. 系统自动抵扣对应金额\n3. 每个订单仅可使用一张优惠券\n\n## 优惠券类型\n\n- 满减券：满指定金额可使用\n- 折扣券：按比例折扣\n- 无门槛券：无最低消费限制\n\n## 优惠券过期\n\n优惠券过期后自动失效。# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提",
+      "ground_truth": "优惠券过期自动失效，如因平台故障导致可联系客服核实补发，个人原因过期不补发",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_026",
+      "question": "怎么申请换货？",
+      "answer": "# 换货服务\n\n## 换货流程\n\n1. 进入「我的订单」-「申请售后」\n2. 选择「换货」并填写换货原因\n3. 提交申请，等待审核\n4. 审核通过后，按提示寄回商品\n5. 平台收到商品后发出新商品\n\n## 换货运费\n\n- 质量问题：平台承担来回运费\n- 非质量问题（如尺码不合）：用户承担来回运费\n\n。# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为",
+      "ground_truth": "在订单详情页点击「申请售后」，选择换货原因并提交，审核通过后寄回",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_027",
+      "question": "换货运费谁出？",
+      "answer": "# 换货服务\n\n## 换货流程\n\n1. 进入「我的订单」-「申请售后」\n2. 选择「换货」并填写换货原因\n3. 提交申请，等待审核\n4. 审核通过后，按提示寄回商品\n5. 平台收到商品后发出新商品\n\n## 换货运费\n\n- 质量问题：平台承担来回运费\n- 非质量问题（如尺码不合）：用户承担来回运费\n\n。# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为",
+      "ground_truth": "质量问题换货运费由平台承担，非质量问题由用户承担",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_028",
+      "question": "商品有质量问题怎么办？",
+      "answer": "# 换货服务\n\n## 换货流程\n\n1. 进入「我的订单」-「申请售后」\n2. 选择「换货」并填写换货原因\n3. 提交申请，等待审核\n4. 审核通过后，按提示寄回商品\n5. 平台收到商品后发出新商品\n\n## 换货运费\n\n- 质量问题：平台承担来回运费\n- 非质量问题（如尺码不合）：用户承担来回运费\n\n。# 维修服务\n\n## 保修期间维修\n\n保修期内非人为损坏的质量问题，免费维修。需提供购机凭证。\n\n",
+      "ground_truth": "7天内可退货，15天内可换货，1年内可保修，需提供质量问题凭证",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_029",
+      "question": "保修需要什么凭证？",
+      "answer": "# 保修政策\n\n## 保修期限\n\n- 整机保修：1 年\n- 主要部件保修：2 年（主板、CPU、内存等）\n- 电池保修：1 年\n- 充电器、数据线等配件：3 个月\n\n## 保修范围\n\n保修期间内，非人为损坏的质量问题可免费维修。包括：\n- 屏幕显示异常\n- 充电故障\n- 系统无法开机\n- 摄像头故障。# 维修服务\n\n## 保修期间维修\n\n保修期内非人为损坏的质量问题，免费维修。需提供购机凭证。\n\n",
+      "ground_truth": "需要订单截图和商品故障照片/视频，寄修需保留原包装",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_030",
+      "question": "保修期间修不好怎么办？",
+      "answer": "# 维修服务\n\n## 保修期间维修\n\n保修期内非人为损坏的质量问题，免费维修。需提供购机凭证。\n\n## 保修期内维修收费吗\n\n保修期内属于质量问题的维修不收费。若为人为损坏（如进水、摔落），即使在保修期内也需付费维修。\n\n## 保修修不好怎么办\n\n若保修期内同一故障维修两次仍无法正常使用，可申请换机。# 保修政策\n\n## 保修期限\n\n- 整机保修：1 年\n- 主要部件保修：2 年（主板、CPU、内",
+      "ground_truth": "同一故障维修两次仍无法正常使用，可申请更换新机",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_031",
+      "question": "部分退款怎么申请？",
+      "answer": "# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提交\n3. 平台审核（通常 1-2 个工作日）\n4. 审核通过后，按原路退回\n\n## 到账时间\n\n退款审核通过后，3-5 个工作日到账。具体到账时间取决于支付渠道：\n- 支付宝：1-3 个工作日\n- 微信。# 退款政策\n\n## 退款总则\n\n本平台支持 7 天无理由退款。自商品签收之日起 7 天内，商品需",
+      "ground_truth": "在订单详情页申请部分退款，填写退款金额和原因，审核后到账",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_032",
+      "question": "退款审核要多久？",
+      "answer": "# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提交\n3. 平台审核（通常 1-2 个工作日）\n4. 审核通过后，按原路退回\n\n## 到账时间\n\n退款审核通过后，3-5 个工作日到账。具体到账时间取决于支付渠道：\n- 支付宝：1-3 个工作日\n- 微信。# 退款政策\n\n## 退款总则\n\n本平台支持 7 天无理由退款。自商品签收之日起 7 天内，商品需",
+      "ground_truth": "退款申请一般在1-2个工作日内审核完成",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_033",
+      "question": "可以修改收货地址吗？",
+      "answer": "# 换货服务\n\n## 换货流程\n\n1. 进入「我的订单」-「申请售后」\n2. 选择「换货」并填写换货原因\n3. 提交申请，等待审核\n4. 审核通过后，按提示寄回商品\n5. 平台收到商品后发出新商品\n\n## 换货运费\n\n- 质量问题：平台承担来回运费\n- 非质量问题（如尺码不合）：用户承担来回运费\n\n。# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为",
+      "ground_truth": "未发货的订单可在订单详情页修改地址，已发货订单无法修改",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_034",
+      "question": "屏幕尺寸是多少？",
+      "answer": "# X1 手机参数\n\n## 基本参数\n\n- 屏幕尺寸：6.5 英寸 OLED 直屏\n- 分辨率：2400 x 1080\n- 刷新率：120Hz\n\n## 电池与充电\n\n- 电池容量：5000mAh\n- 有线快充：66W\n- 无线充电：不支持\n\n## 处理器\n\n- 芯片：骁龙 7 Gen 3\n- 工艺：。# X1 Pro 手机参数\n\n## 与 X1 的区别\n\nX1 Pro 是 X1 的升级版本，主要区",
+      "ground_truth": "屏幕尺寸为6.7英寸OLED显示屏",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_035",
+      "question": "支持5G吗？",
+      "answer": "# X1 手机参数\n\n## 基本参数\n\n- 屏幕尺寸：6.5 英寸 OLED 直屏\n- 分辨率：2400 x 1080\n- 刷新率：120Hz\n\n## 电池与充电\n\n- 电池容量：5000mAh\n- 有线快充：66W\n- 无线充电：不支持\n\n## 处理器\n\n- 芯片：骁龙 7 Gen 3\n- 工艺：。# X1 Pro 手机参数\n\n## 与 X1 的区别\n\nX1 Pro 是 X1 的升级版本，主要区",
+      "ground_truth": "支持双模5G（SA+NSA），兼容国内所有运营商5G频段",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_036",
+      "question": "怎么注销账号？",
+      "answer": "# 账号安全\n\n## 两步验证\n\n开启两步验证可大幅提升账号安全性：\n1. 进入「设置」-「账户安全」\n2. 选择「两步验证」\n3. 绑定手机或验证器 App\n4. 登录时需输入动态验证码\n\n## 账号被盗\n\n若发现账号被盗，请立即：\n1. 通过「忘记密码」重置密码\n2. 检查并解绑陌生设备\n3. 。# 优惠券使用\n\n## 使用优惠券\n\n下单时使用优惠券：\n1. 在结算页面选择可用优惠券\n2. 系",
+      "ground_truth": "设置 → 账户安全 → 注销账号，需验证身份，注销后数据无法恢复",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_037",
+      "question": "怎么联系人工客服？",
+      "answer": "# 维修服务\n\n## 保修期间维修\n\n保修期内非人为损坏的质量问题，免费维修。需提供购机凭证。\n\n## 保修期内维修收费吗\n\n保修期内属于质量问题的维修不收费。若为人为损坏（如进水、摔落），即使在保修期内也需付费维修。\n\n## 保修修不好怎么办\n\n若保修期内同一故障维修两次仍无法正常使用，可申请换机。# 保修政策\n\n## 保修期限\n\n- 整机保修：1 年\n- 主要部件保修：2 年（主板、CPU、内",
+      "ground_truth": "APP内「我的」→「客服中心」→「人工客服」，工作时间9:00-22:00",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_038",
+      "question": "可以上门维修吗？",
+      "answer": "# 保修政策\n\n## 保修期限\n\n- 整机保修：1 年\n- 主要部件保修：2 年（主板、CPU、内存等）\n- 电池保修：1 年\n- 充电器、数据线等配件：3 个月\n\n## 保修范围\n\n保修期间内，非人为损坏的质量问题可免费维修。包括：\n- 屏幕显示异常\n- 充电故障\n- 系统无法开机\n- 摄像头故障。# 维修服务\n\n## 保修期间维修\n\n保修期内非人为损坏的质量问题，免费维修。需提供购机凭证。\n\n",
+      "ground_truth": "部分城市支持上门维修，可在官网查询服务网点",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "correctness",
+          "score": 0.296,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_039",
+      "question": "退款时赠品要退吗？",
+      "answer": "# 退款政策\n\n## 退款总则\n\n本平台支持 7 天无理由退款。自商品签收之日起 7 天内，商品需保持完好、不影响二次销售，消费者可申请无理由退款。\n\n## 退款条件\n\n1. 商品签收后 7 天内\n2. 商品外观完好，配件齐全\n3. 无人为损坏痕迹\n4. 不影响二次销售\n\n## 不支持退款的情况\n\n。# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提",
+      "ground_truth": "全额退款需退回赠品，部分退款赠品可保留",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_040",
+      "question": "支持海外配送吗？",
+      "answer": "# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为准。大促期间发货可能延迟 1-2 天。\n\n## 配送时长\n\n- 一线城市：发货后 2-3 天送达\n- 二线城市：发货后 3-4 天送达\n- 偏远地区：发货后 5-7 天送达\n- 具体以实际物流信息为准\n。# 物流查询\n\n## 查询方式\n\n用户可通过以下方式查询物流信息：\n1. 进入「我的订单」\n2. ",
+      "ground_truth": "暂不支持海外配送，仅配送中国大陆地区",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_041",
+      "question": "存储空间有几个版本？",
+      "answer": "# X1 手机参数\n\n## 基本参数\n\n- 屏幕尺寸：6.5 英寸 OLED 直屏\n- 分辨率：2400 x 1080\n- 刷新率：120Hz\n\n## 电池与充电\n\n- 电池容量：5000mAh\n- 有线快充：66W\n- 无线充电：不支持\n\n## 处理器\n\n- 芯片：骁龙 7 Gen 3\n- 工艺：。# 保修政策\n\n## 保修期限\n\n- 整机保修：1 年\n- 主要部件保修：2 年（主板、CPU、内",
+      "ground_truth": "提供128GB、256GB、512GB三个版本",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "correctness",
+          "score": 0.2435,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_042",
+      "question": "一个手机号能注册几个账号？",
+      "answer": "# 账号安全\n\n## 两步验证\n\n开启两步验证可大幅提升账号安全性：\n1. 进入「设置」-「账户安全」\n2. 选择「两步验证」\n3. 绑定手机或验证器 App\n4. 登录时需输入动态验证码\n\n## 账号被盗\n\n若发现账号被盗，请立即：\n1. 通过「忘记密码」重置密码\n2. 检查并解绑陌生设备\n3. 。# 密码管理\n\n## 修改密码\n\n修改密码步骤：\n1. 进入「设置」\n2. 选择「账户安全」\n3.",
+      "ground_truth": "一个手机号只能注册一个账号",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "correctness",
+          "score": 0.2871,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_043",
+      "question": "购物车最多能加多少商品？",
+      "answer": "# 收藏与发票\n\n## 收藏商品\n\n收藏商品步骤：\n1. 进入商品详情页\n2. 点击页面上的爱心图标\n3. 收藏成功后可在「我的」-「我的收藏」中查看\n\n取消收藏：再次点击爱心图标即可。\n\n## 申请发票\n\n订单完成后可申请发票：\n1. 进入「我的订单」\n2. 找到对应订单，点击「申请发票」\n3. 。# 换货服务\n\n## 换货流程\n\n1. 进入「我的订单」-「申请售后」\n2. 选择「换货」并填写换",
+      "ground_truth": "购物车最多可添加100件商品",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_044",
+      "question": "保修期内维修要收费吗？",
+      "answer": "# 维修服务\n\n## 保修期间维修\n\n保修期内非人为损坏的质量问题，免费维修。需提供购机凭证。\n\n## 保修期内维修收费吗\n\n保修期内属于质量问题的维修不收费。若为人为损坏（如进水、摔落），即使在保修期内也需付费维修。\n\n## 保修修不好怎么办\n\n若保修期内同一故障维修两次仍无法正常使用，可申请换机。# 保修政策\n\n## 保修期限\n\n- 整机保修：1 年\n- 主要部件保修：2 年（主板、CPU、内",
+      "ground_truth": "非人为损坏的维修免费，人为损坏需收取配件费",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_045",
+      "question": "货到付款的订单怎么退款？",
+      "answer": "# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提交\n3. 平台审核（通常 1-2 个工作日）\n4. 审核通过后，按原路退回\n\n## 到账时间\n\n退款审核通过后，3-5 个工作日到账。具体到账时间取决于支付渠道：\n- 支付宝：1-3 个工作日\n- 微信。# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为",
+      "ground_truth": "货到付款订单退款需提供银行卡号，款项将退回该银行卡",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_046",
+      "question": "手机进水了还能保修吗？",
+      "answer": "# 保修政策\n\n## 保修期限\n\n- 整机保修：1 年\n- 主要部件保修：2 年（主板、CPU、内存等）\n- 电池保修：1 年\n- 充电器、数据线等配件：3 个月\n\n## 保修范围\n\n保修期间内，非人为损坏的质量问题可免费维修。包括：\n- 屏幕显示异常\n- 充电故障\n- 系统无法开机\n- 摄像头故障。# 维修服务\n\n## 保修期间维修\n\n保修期内非人为损坏的质量问题，免费维修。需提供购机凭证。\n\n",
+      "ground_truth": "进水属于人为损坏，不在保修范围内，需付费维修",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "correctness",
+          "score": 0.2951,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_047",
+      "question": "我不在家可以让快递放驿站吗？",
+      "answer": "# 物流查询\n\n## 查询方式\n\n用户可通过以下方式查询物流信息：\n1. 进入「我的订单」\n2. 点击对应订单进入订单详情页\n3. 点击「查看物流」按钮\n4. 查看实时物流轨迹\n\n## 物流信息更新\n\n物流信息由快递公司实时同步，通常每 2-4 小时更新一次。若物流长时间未更新（超过 48 小时），。# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为",
+      "ground_truth": "可以，在订单备注中注明放驿站，或在快递派送时联系快递员",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_048",
+      "question": "会员等级怎么升级？",
+      "answer": "# 优惠券使用\n\n## 使用优惠券\n\n下单时使用优惠券：\n1. 在结算页面选择可用优惠券\n2. 系统自动抵扣对应金额\n3. 每个订单仅可使用一张优惠券\n\n## 优惠券类型\n\n- 满减券：满指定金额可使用\n- 折扣券：按比例折扣\n- 无门槛券：无最低消费限制\n\n## 优惠券过期\n\n优惠券过期后自动失效。# 收藏与发票\n\n## 收藏商品\n\n收藏商品步骤：\n1. 进入商品详情页\n2. 点击页面上的爱心图",
+      "ground_truth": "累计消费金额达到对应门槛自动升级，V1满500，V2满2000，V3满5000",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "correctness",
+          "score": 0.2846,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_049",
+      "question": "账号被冻结了怎么解封？",
+      "answer": "# 账号安全\n\n## 两步验证\n\n开启两步验证可大幅提升账号安全性：\n1. 进入「设置」-「账户安全」\n2. 选择「两步验证」\n3. 绑定手机或验证器 App\n4. 登录时需输入动态验证码\n\n## 账号被盗\n\n若发现账号被盗，请立即：\n1. 通过「忘记密码」重置密码\n2. 检查并解绑陌生设备\n3. 。# 优惠券使用\n\n## 使用优惠券\n\n下单时使用优惠券：\n1. 在结算页面选择可用优惠券\n2. 系",
+      "ground_truth": "联系客服提交申诉，提供身份信息，核实后1-3个工作日解封",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_050",
+      "question": "已经过了保修期还能维修吗？",
+      "answer": "# 维修服务\n\n## 保修期间维修\n\n保修期内非人为损坏的质量问题，免费维修。需提供购机凭证。\n\n## 保修期内维修收费吗\n\n保修期内属于质量问题的维修不收费。若为人为损坏（如进水、摔落），即使在保修期内也需付费维修。\n\n## 保修修不好怎么办\n\n若保修期内同一故障维修两次仍无法正常使用，可申请换机。# 保修政策\n\n## 保修期限\n\n- 整机保修：1 年\n- 主要部件保修：2 年（主板、CPU、内",
+      "ground_truth": "可以付费维修，可在官网查询配件价格",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_051",
+      "question": "退款后优惠券会退回吗？",
+      "answer": "# 优惠券使用\n\n## 使用优惠券\n\n下单时使用优惠券：\n1. 在结算页面选择可用优惠券\n2. 系统自动抵扣对应金额\n3. 每个订单仅可使用一张优惠券\n\n## 优惠券类型\n\n- 满减券：满指定金额可使用\n- 折扣券：按比例折扣\n- 无门槛券：无最低消费限制\n\n## 优惠券过期\n\n优惠券过期后自动失效。# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提",
+      "ground_truth": "全额退款时优惠券退回，部分退款优惠券不退回",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_052",
+      "question": "支持NFC吗？",
+      "answer": "# X1 手机参数\n\n## 基本参数\n\n- 屏幕尺寸：6.5 英寸 OLED 直屏\n- 分辨率：2400 x 1080\n- 刷新率：120Hz\n\n## 电池与充电\n\n- 电池容量：5000mAh\n- 有线快充：66W\n- 无线充电：不支持\n\n## 处理器\n\n- 芯片：骁龙 7 Gen 3\n- 工艺：。# X1 Pro 手机参数\n\n## 与 X1 的区别\n\nX1 Pro 是 X1 的升级版本，主要区",
+      "ground_truth": "X1和X1 Pro均支持NFC功能",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "correctness",
+          "score": 0.2477,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_053",
+      "question": "发货时间是什么时候？",
+      "answer": "# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为准。大促期间发货可能延迟 1-2 天。\n\n## 配送时长\n\n- 一线城市：发货后 2-3 天送达\n- 二线城市：发货后 3-4 天送达\n- 偏远地区：发货后 5-7 天送达\n- 具体以实际物流信息为准\n。# 收藏与发票\n\n## 收藏商品\n\n收藏商品步骤：\n1. 进入商品详情页\n2. 点击页面上的爱心图",
+      "ground_truth": "当天16:00前下单当天发货，16:00后次日发货",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_054",
+      "question": "怎么取消订单？",
+      "answer": "# 优惠券使用\n\n## 使用优惠券\n\n下单时使用优惠券：\n1. 在结算页面选择可用优惠券\n2. 系统自动抵扣对应金额\n3. 每个订单仅可使用一张优惠券\n\n## 优惠券类型\n\n- 满减券：满指定金额可使用\n- 折扣券：按比例折扣\n- 无门槛券：无最低消费限制\n\n## 优惠券过期\n\n优惠券过期后自动失效。# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为",
+      "ground_truth": "未发货的订单可在订单详情页直接取消，已发货订单需申请退货",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gs_055",
+      "question": "密码有什么要求？",
+      "answer": "# 密码管理\n\n## 修改密码\n\n修改密码步骤：\n1. 进入「设置」\n2. 选择「账户安全」\n3. 点击「修改密码」\n4. 验证原密码\n5. 设置新密码并确认\n\n## 忘记密码\n\n若忘记密码，可通过以下方式重置：\n1. 在登录页点击「忘记密码」\n2. 输入注册手机号\n3. 获取并输入短信验证码\n4.。# 账号安全\n\n## 两步验证\n\n开启两步验证可大幅提升账号安全性：\n1. 进入「设置」-「账户安",
+      "ground_truth": "密码长度8-20位，需包含字母和数字",
+      "context_count": 3,
+      "failed_metrics": [
+        {
+          "metric": "answer_relevancy",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_precision",
+          "score": 0.0,
+          "threshold": 0.3
+        },
+        {
+          "metric": "context_recall",
+          "score": 0.0,
+          "threshold": 0.3
+        }
+      ]
+    }
+  ]
+}

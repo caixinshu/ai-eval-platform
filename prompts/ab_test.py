@@ -23,7 +23,7 @@ from pathlib import Path
 # 确保能 import 项目模块
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from datasets import load_golden  # type: ignore
+from eval_datasets import load_golden  # type: ignore
 from prompts.registry import load_prompt, PROMPT_REGISTRY
 
 

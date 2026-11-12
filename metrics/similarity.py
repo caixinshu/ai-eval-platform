@@ -7,6 +7,18 @@ import math
 import re
 from collections import Counter
 
+# 缓存 sentence-transformers 模型，避免每次调用都重新加载
+_st_model = None
+
+
+def _get_st_model():
+    """懒加载并缓存 SentenceTransformer 模型"""
+    global _st_model
+    if _st_model is None:
+        from sentence_transformers import SentenceTransformer
+        _st_model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
+    return _st_model
+
 
 def _tokenize(text: str) -> list[str]:
     """分词：英文按单词，中文按 2-gram 字，混合兼容"""
@@ -56,10 +68,10 @@ def cosine_similarity(prediction: str, gold: str) -> float:
     """
     余弦相似度。
     优先使用 sentence-transformers（如已安装），否则降级为 TF-IDF + 余弦。
+    模型已缓存，首次调用加载后复用。
     """
     try:
-        from sentence_transformers import SentenceTransformer
-        model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
+        model = _get_st_model()
         emb1, emb2 = model.encode([prediction, gold])
         dot = sum(a * b for a, b in zip(emb1, emb2))
         norm1 = math.sqrt(sum(a * a for a in emb1))
