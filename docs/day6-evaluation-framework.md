@@ -65,13 +65,14 @@ def run_ragas_eval(cases, qa_func) -> dict:
 ### 2.3 基线脚本（`scripts/run_baseline.py`）
 
 流程（已优化：问答结果只收集一次，评测和 badcase 复用）：
-1. 加载黄金集（55 条）
-2. **一次性收集所有问答结果**（循环调用 `app.rag.ask()`，55 条只调 55 次）
-3. 运行语义评测（4 指标，使用预收集结果）
-4. 运行规则评测（安全/格式/长度/正确性，使用预收集结果）
-5. 用 `metrics.scorer` 计算综合得分
-6. 逐条分析 badcase（低于阈值的指标，使用预收集结果）
-7. 输出 JSON 报告到 `reports/baseline_golden_v1.json`
+1. 加载数据集（`--dataset golden|adversarial|edge`）
+2. **一次性收集所有问答结果**（循环调用 `app.rag.ask()`，55 条只调 55 次；单条异常记录不中断）
+3. 黄金集：运行语义评测（4 指标，使用预收集结果）
+4. 对抗集 / 边界集：运行断言评测（详见 Day 7 文档）
+5. 运行规则评测（安全/格式/长度/正确性，使用预收集结果）
+6. 用 `metrics.scorer` 计算综合得分（对抗/边界集用断言通过率，安全一票否决）
+7. 逐条分析 badcase（黄金集按指标阈值，对抗/边界集按断言失败）
+8. 输出 JSON 报告到 `reports/baseline_<dataset>_v1.json`
 
 ---
 
@@ -161,6 +162,7 @@ Badcase 数：**55 / 55**（全部用例均有指标低于阈值）
 | `evaluation/__init__.py` | 包初始化 |
 | `evaluation/ragas_eval.py` | Ragas 语义评测（含规则降级） |
 | `evaluation/rule_eval.py` | 规则评测（安全/格式/长度/正确性） |
+| `evaluation/assertion_eval.py` | 断言评测（对抗/边界集，Day 7 新增） |
 | `scripts/run_baseline.py` | 首轮基线评测脚本（预收集优化） |
 | `metrics/similarity.py` | 相似度模块（增加模型缓存，性能优化） |
 | `reports/baseline_golden_v1.json` | 基线报告（含 badcase） |

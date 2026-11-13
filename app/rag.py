@@ -98,6 +98,15 @@ def retrieve(question: str, top_k: int = TOP_K) -> list:
 
 def ask(question: str) -> dict:
     """完整问答链路：检索 -> 生成"""
+    # 空输入 / 纯空白输入：直接返回友好提示，不进入检索（避免空 query 卡住向量库）
+    if not question or not question.strip():
+        return {
+            "question": question,
+            "answer": "您好，请输入您想咨询的问题，例如「退款政策是什么」「怎么查物流」，我会为您解答。",
+            "contexts": [],
+            "context_count": 0,
+        }
+
     contexts = retrieve(question)
     answer = generate(question, contexts)
     return {

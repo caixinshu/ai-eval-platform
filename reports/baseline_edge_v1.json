@@ -1,0 +1,160 @@
+{
+  "run_at": "2026-11-13T09:05:38.356879",
+  "prompt_version": "v1.2.0",
+  "model": "mock (no API key)",
+  "embedding_model": "BAAI/bge-small-zh-v1.5",
+  "dataset": "edge_set v1",
+  "case_count": 17,
+  "engine": "assertion",
+  "knowledge_base": {
+    "collection": "knowledge_base",
+    "count": 13,
+    "embedding_model": "BAAI/bge-small-zh-v1.5",
+    "llm_model": "mock (no API key)"
+  },
+  "metrics": {
+    "assertion_pass_rate": 0.7059,
+    "safety": 1.0,
+    "format": 1.0,
+    "length": 0.1176
+  },
+  "total_score": 70.59,
+  "grade": "C (合格)",
+  "app_error_count": 0,
+  "badcase_count": 5,
+  "badcase_ids": [
+    "edge_004",
+    "edge_005",
+    "edge_013",
+    "edge_014",
+    "edge_015"
+  ],
+  "badcases": [
+    {
+      "id": "edge_004",
+      "category": "歧义输入",
+      "question": "它坏了",
+      "expected_behavior": "歧义输入应主动追问具体信息，不应瞎猜",
+      "answer": "# 维修服务\n\n## 保修期间维修\n\n保修期内非人为损坏的质量问题，免费维修。需提供购机凭证。\n\n## 保修期内维修收费吗\n\n保修期内属于质量问题的维修不收费。若为人为损坏（如进水、摔落），即使在保修期内也需付费维修。\n\n## 保修修不好怎么办\n\n若保修期内同一故障维修两次仍无法正常使用，可申请换机。# 保修政策\n\n## 保修期限\n\n- 整机保修：1 年\n- 主要部件保修：2 年（主板、CPU、内",
+      "reason": "未命中任何期望关键词，期望其一: 请问/具体/什么商品/哪个/详细"
+    },
+    {
+      "id": "edge_005",
+      "category": "歧义输入",
+      "question": "怎么办",
+      "expected_behavior": "缺乏上下文时应引导用户补充信息",
+      "answer": "# 账号安全\n\n## 两步验证\n\n开启两步验证可大幅提升账号安全性：\n1. 进入「设置」-「账户安全」\n2. 选择「两步验证」\n3. 绑定手机或验证器 App\n4. 登录时需输入动态验证码\n\n## 账号被盗\n\n若发现账号被盗，请立即：\n1. 通过「忘记密码」重置密码\n2. 检查并解绑陌生设备\n3. 。# 密码管理\n\n## 修改密码\n\n修改密码步骤：\n1. 进入「设置」\n2. 选择「账户安全」\n3.",
+      "reason": "未命中任何期望关键词，期望其一: 请问/具体/描述/详细"
+    },
+    {
+      "id": "edge_013",
+      "category": "多轮对话",
+      "question": "上一个问题的答案再详细说说",
+      "expected_behavior": "缺乏上下文时应提示用户重复问题，不应编造",
+      "answer": "# 换货服务\n\n## 换货流程\n\n1. 进入「我的订单」-「申请售后」\n2. 选择「换货」并填写换货原因\n3. 提交申请，等待审核\n4. 审核通过后，按提示寄回商品\n5. 平台收到商品后发出新商品\n\n## 换货运费\n\n- 质量问题：平台承担来回运费\n- 非质量问题（如尺码不合）：用户承担来回运费\n\n。# 保修政策\n\n## 保修期限\n\n- 整机保修：1 年\n- 主要部件保修：2 年（主板、CPU、内",
+      "reason": "未命中任何期望关键词，期望其一: 请问/重复/哪个问题/具体"
+    },
+    {
+      "id": "edge_014",
+      "category": "否定式提问",
+      "question": "退款不是7天吧？",
+      "expected_behavior": "应明确回答退款是7天，不被否定式带偏",
+      "answer": "# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提交\n3. 平台审核（通常 1-2 个工作日）\n4. 审核通过后，按原路退回\n\n## 到账时间\n\n退款审核通过后，3-5 个工作日到账。具体到账时间取决于支付渠道：\n- 支付宝：1-3 个工作日\n- 微信。# 退款政策\n\n## 退款总则\n\n本平台支持 7 天无理由退款。自商品签收之日起 7 天内，商品需",
+      "reason": "未命中任何期望关键词，期望其一: 7天/是7天"
+    },
+    {
+      "id": "edge_015",
+      "category": "模糊数字",
+      "question": "发货大概要几天",
+      "expected_behavior": "应给出具体时效范围，而非含糊回答",
+      "answer": "# 配送时效\n\n## 发货时间\n\n现货商品下单后 24 小时内发货。预售商品以页面标注的发货时间为准。大促期间发货可能延迟 1-2 天。\n\n## 配送时长\n\n- 一线城市：发货后 2-3 天送达\n- 二线城市：发货后 3-4 天送达\n- 偏远地区：发货后 5-7 天送达\n- 具体以实际物流信息为准\n。# 退款流程与到账\n\n## 退款流程\n\n1. 在订单详情页点击「申请退款」\n2. 选择退款原因并提",
+      "reason": "未命中任何期望关键词，期望其一: 16:00/当天/次日/2-5天"
+    }
+  ],
+  "assertion": {
+    "pass_rate": 0.7059,
+    "passed": 12,
+    "failed": 5,
+    "total": 17,
+    "by_category": {
+      "空输入": {
+        "passed": 2,
+        "failed": 0,
+        "total": 2,
+        "pass_rate": 1.0
+      },
+      "超长输入": {
+        "passed": 1,
+        "failed": 0,
+        "total": 1,
+        "pass_rate": 1.0
+      },
+      "歧义输入": {
+        "passed": 0,
+        "failed": 2,
+        "total": 2,
+        "pass_rate": 0.0
+      },
+      "错别字": {
+        "passed": 2,
+        "failed": 0,
+        "total": 2,
+        "pass_rate": 1.0
+      },
+      "中英文混合": {
+        "passed": 1,
+        "failed": 0,
+        "total": 1,
+        "pass_rate": 1.0
+      },
+      "特殊字符": {
+        "passed": 2,
+        "failed": 0,
+        "total": 2,
+        "pass_rate": 1.0
+      },
+      "重复输入": {
+        "passed": 1,
+        "failed": 0,
+        "total": 1,
+        "pass_rate": 1.0
+      },
+      "网络用语": {
+        "passed": 1,
+        "failed": 0,
+        "total": 1,
+        "pass_rate": 1.0
+      },
+      "多轮对话": {
+        "passed": 0,
+        "failed": 1,
+        "total": 1,
+        "pass_rate": 0.0
+      },
+      "否定式提问": {
+        "passed": 0,
+        "failed": 1,
+        "total": 1,
+        "pass_rate": 0.0
+      },
+      "模糊数字": {
+        "passed": 0,
+        "failed": 1,
+        "total": 1,
+        "pass_rate": 0.0
+      },
+      "emoji输入": {
+        "passed": 1,
+        "failed": 0,
+        "total": 1,
+        "pass_rate": 1.0
+      },
+      "反问句": {
+        "passed": 1,
+        "failed": 0,
+        "total": 1,
+        "pass_rate": 1.0
+      }
+    }
+  }
+}
