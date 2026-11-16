@@ -1,0 +1,22 @@
+[
+  {"id": "jv_001", "question": "退款多久到账？", "answer": "退款审核通过后 3-5 个工作日内原路退回支付账户。", "ground_truth": "退款审核通过后3-5个工作日内原路退回支付账户", "human_score": 5},
+  {"id": "jv_002", "question": "怎么查看物流？", "answer": "在订单详情页点击「查看物流」就能看到实时轨迹。", "ground_truth": "在订单详情页点击「查看物流」即可看到实时物流信息", "human_score": 5},
+  {"id": "jv_003", "question": "怎么修改密码？", "answer": "登录后进入设置-账户安全-修改密码，需要先验证原密码。", "ground_truth": "登录后进入设置 → 账户安全 → 修改密码，需验证原密码", "human_score": 5},
+  {"id": "jv_004", "question": "支持哪些存储版本？", "answer": "提供 128GB、256GB、512GB 三个存储版本。", "ground_truth": "提供128GB、256GB、512GB三个版本", "human_score": 5},
+  {"id": "jv_005", "question": "可以指定快递吗？", "answer": "暂不支持指定快递公司，系统会根据收货地址自动分配时效最优的快递。", "ground_truth": "暂不支持指定快递，由系统根据地址自动分配最优快递", "human_score": 4},
+  {"id": "jv_006", "question": "发货要多久？", "answer": "当天 16:00 前下单当天发货，16:00 之后下单次日发货。", "ground_truth": "当天16:00前下单当天发货，16:00后次日发货", "human_score": 5},
+  {"id": "jv_007", "question": "保修多久？", "answer": "整机保修 1 年，屏幕和电池等主要部件保修 2 年。", "ground_truth": "整机保修1年，主要部件保修2年", "human_score": 4},
+  {"id": "jv_008", "question": "怎么申请发票？", "answer": "订单完成后在订单详情页申请发票，填写抬头后电子发票会发到邮箱。", "ground_truth": "订单完成后在订单详情页点击「申请发票」，填写抬头信息后电子发票发至邮箱", "human_score": 5},
+  {"id": "jv_009", "question": "怎么换货？", "answer": "在订单详情页申请售后，选择换货并填写原因，审核通过后寄回商品。", "ground_truth": "在订单详情页点击「申请售后」，选择换货原因并提交，审核通过后寄回", "human_score": 5},
+  {"id": "jv_010", "question": "支持 5G 吗？", "answer": "支持 SA/NSA 双模 5G，兼容国内三大运营商 5G 频段。", "ground_truth": "支持双模5G（SA+NSA），兼容国内所有运营商5G频段", "human_score": 5},
+  {"id": "jv_011", "question": "质量问题可以退换吗？", "answer": "7 天内出现质量问题可以退货。", "ground_truth": "7天内可退货，15天内可换货，1年内可保修，需提供质量问题凭证", "human_score": 3},
+  {"id": "jv_012", "question": "忘记密码怎么办？", "answer": "用注册手机号接收验证码即可重置密码。", "ground_truth": "点击登录页「忘记密码」，通过手机号验证码重置", "human_score": 4},
+  {"id": "jv_013", "question": "运费谁承担？", "answer": "质量问题换货由平台承担运费。", "ground_truth": "质量问题换货运费由平台承担，非质量问题由用户承担", "human_score": 3},
+  {"id": "jv_014", "question": "配送到哪些地区？", "answer": "目前只配送中国大陆地区。", "ground_truth": "暂不支持海外配送，仅配送中国大陆地区", "human_score": 4},
+  {"id": "jv_015", "question": "订单能取消吗？", "answer": "未发货的订单可以直接取消。", "ground_truth": "未发货的订单可在订单详情页直接取消，已发货订单需申请退货", "human_score": 3},
+  {"id": "jv_016", "question": "退款多久到账？", "answer": "退款需要 30 个工作日才能到账。", "ground_truth": "退款审核通过后3-5个工作日内原路退回支付账户", "human_score": 1},
+  {"id": "jv_017", "question": "可以指定快递吗？", "answer": "可以指定顺丰或京东快递。", "ground_truth": "暂不支持指定快递，由系统根据地址自动分配最优快递", "human_score": 0},
+  {"id": "jv_018", "question": "保修多久？", "answer": "整机保修 2 年，主要部件保修 1 年。", "ground_truth": "整机保修1年，主要部件保修2年", "human_score": 1},
+  {"id": "jv_019", "question": "支持 5G 吗？", "answer": "不支持 5G，仅支持 4G 网络。", "ground_truth": "支持双模5G（SA+NSA），兼容国内所有运营商5G频段", "human_score": 0},
+  {"id": "jv_020", "question": "订单能修改地址吗？", "answer": "已发货的订单也可以直接修改收货地址。", "ground_truth": "未发货的订单可在订单详情页修改地址，已发货订单无法修改", "human_score": 0}
+]

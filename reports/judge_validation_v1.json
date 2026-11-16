@@ -1,0 +1,171 @@
+{
+  "judge_source": "fallback",
+  "judge_model": "gpt-4o-mini",
+  "sample_count": 20,
+  "tolerance": 1,
+  "agreement_rate": 0.75,
+  "mean_abs_error": 0.85,
+  "conclusion": "需优化 rubric（当前为降级模式，接入真实 LLM 后需重新校验）",
+  "rows": [
+    {
+      "id": "jv_001",
+      "human_score": 5,
+      "judge_score": 5,
+      "judge_raw": 1.0,
+      "reason": "降级:相似度0.96",
+      "agreement": true
+    },
+    {
+      "id": "jv_002",
+      "human_score": 5,
+      "judge_score": 4,
+      "judge_raw": 0.8,
+      "reason": "降级:相似度0.89",
+      "agreement": true
+    },
+    {
+      "id": "jv_003",
+      "human_score": 5,
+      "judge_score": 5,
+      "judge_raw": 1.0,
+      "reason": "降级:相似度0.96",
+      "agreement": true
+    },
+    {
+      "id": "jv_004",
+      "human_score": 5,
+      "judge_score": 5,
+      "judge_raw": 1.0,
+      "reason": "降级:相似度0.95",
+      "agreement": true
+    },
+    {
+      "id": "jv_005",
+      "human_score": 4,
+      "judge_score": 4,
+      "judge_raw": 0.8,
+      "reason": "降级:相似度0.93",
+      "agreement": true
+    },
+    {
+      "id": "jv_006",
+      "human_score": 5,
+      "judge_score": 5,
+      "judge_raw": 1.0,
+      "reason": "降级:相似度0.99",
+      "agreement": true
+    },
+    {
+      "id": "jv_007",
+      "human_score": 4,
+      "judge_score": 4,
+      "judge_raw": 0.8,
+      "reason": "降级:相似度0.93",
+      "agreement": true
+    },
+    {
+      "id": "jv_008",
+      "human_score": 5,
+      "judge_score": 5,
+      "judge_raw": 1.0,
+      "reason": "降级:相似度0.95",
+      "agreement": true
+    },
+    {
+      "id": "jv_009",
+      "human_score": 5,
+      "judge_score": 5,
+      "judge_raw": 1.0,
+      "reason": "降级:相似度0.95",
+      "agreement": true
+    },
+    {
+      "id": "jv_010",
+      "human_score": 5,
+      "judge_score": 5,
+      "judge_raw": 1.0,
+      "reason": "降级:相似度0.97",
+      "agreement": true
+    },
+    {
+      "id": "jv_011",
+      "human_score": 3,
+      "judge_score": 4,
+      "judge_raw": 0.8,
+      "reason": "降级:相似度0.87",
+      "agreement": true
+    },
+    {
+      "id": "jv_012",
+      "human_score": 4,
+      "judge_score": 3,
+      "judge_raw": 0.6,
+      "reason": "降级:相似度0.86",
+      "agreement": true
+    },
+    {
+      "id": "jv_013",
+      "human_score": 3,
+      "judge_score": 5,
+      "judge_raw": 1.0,
+      "reason": "降级:相似度0.96",
+      "agreement": false
+    },
+    {
+      "id": "jv_014",
+      "human_score": 4,
+      "judge_score": 3,
+      "judge_raw": 0.6,
+      "reason": "降级:相似度0.81",
+      "agreement": true
+    },
+    {
+      "id": "jv_015",
+      "human_score": 3,
+      "judge_score": 3,
+      "judge_raw": 0.6,
+      "reason": "降级:相似度0.85",
+      "agreement": true
+    },
+    {
+      "id": "jv_016",
+      "human_score": 1,
+      "judge_score": 2,
+      "judge_raw": 0.4,
+      "reason": "降级:相似度0.72",
+      "agreement": true
+    },
+    {
+      "id": "jv_017",
+      "human_score": 0,
+      "judge_score": 2,
+      "judge_raw": 0.4,
+      "reason": "降级:相似度0.71",
+      "agreement": false
+    },
+    {
+      "id": "jv_018",
+      "human_score": 1,
+      "judge_score": 5,
+      "judge_raw": 1.0,
+      "reason": "降级:相似度0.98",
+      "agreement": false
+    },
+    {
+      "id": "jv_019",
+      "human_score": 0,
+      "judge_score": 2,
+      "judge_raw": 0.4,
+      "reason": "降级:相似度0.70",
+      "agreement": false
+    },
+    {
+      "id": "jv_020",
+      "human_score": 0,
+      "judge_score": 2,
+      "judge_raw": 0.4,
+      "reason": "降级:相似度0.79",
+      "agreement": false
+    }
+  ]
+}
