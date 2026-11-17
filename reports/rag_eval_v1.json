@@ -1,0 +1,1558 @@
+{
+  "run_at": "2026-11-17T10:33:32.603383",
+  "dataset": "golden_set v1",
+  "case_count": 55,
+  "embedding_model": "BAAI/bge-small-zh-v1.5",
+  "model": "mock (no API key)",
+  "configs": [
+    {
+      "top_k": 2,
+      "metrics": {
+        "context_precision": 0.2273,
+        "context_recall": 0.3818,
+        "faithfulness": 0.9967,
+        "answer_relevancy": 0.6114
+      },
+      "weakest_metric": "context_precision",
+      "quadrant_distribution": {
+        "高召回 × 高忠实": {
+          "count": 21,
+          "diagnosis": "检索准、生成稳",
+          "direction": "保持，关注边界场景"
+        },
+        "低召回 × 高忠实": {
+          "count": 34,
+          "diagnosis": "漏召回，但模型诚实",
+          "direction": "优化切分 / 换 Embedding / 加 Rerank"
+        }
+      },
+      "category_metrics": {
+        "退款政策": {
+          "context_precision": 0.25,
+          "context_recall": 0.4,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.686
+        },
+        "物流查询": {
+          "context_precision": 0.1111,
+          "context_recall": 0.1111,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5925
+        },
+        "产品咨询": {
+          "context_precision": 0.35,
+          "context_recall": 0.6,
+          "faithfulness": 0.9818,
+          "answer_relevancy": 0.5901
+        },
+        "账户安全": {
+          "context_precision": 0.4444,
+          "context_recall": 0.6667,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6274
+        },
+        "功能使用": {
+          "context_precision": 0.0,
+          "context_recall": 0.2222,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4991
+        },
+        "售后服务": {
+          "context_precision": 0.1875,
+          "context_recall": 0.25,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6747
+        }
+      },
+      "threshold_sweep": {
+        "0.65": {
+          "context_precision": 0.5727,
+          "context_recall": 0.8545
+        },
+        "0.70": {
+          "context_precision": 0.3545,
+          "context_recall": 0.6909
+        },
+        "0.75": {
+          "context_precision": 0.2273,
+          "context_recall": 0.3818
+        }
+      },
+      "cases": [
+        {
+          "case_id": "gs_001",
+          "category": "退款政策",
+          "context_precision": 1.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6313
+        },
+        {
+          "case_id": "gs_002",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7994
+        },
+        {
+          "case_id": "gs_003",
+          "category": "退款政策",
+          "context_precision": 0.5,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7335
+        },
+        {
+          "case_id": "gs_004",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.692
+        },
+        {
+          "case_id": "gs_005",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4615
+        },
+        {
+          "case_id": "gs_006",
+          "category": "物流查询",
+          "context_precision": 0.5,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6964
+        },
+        {
+          "case_id": "gs_007",
+          "category": "物流查询",
+          "context_precision": 0.5,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6929
+        },
+        {
+          "case_id": "gs_008",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6927
+        },
+        {
+          "case_id": "gs_009",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5477
+        },
+        {
+          "case_id": "gs_010",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5318
+        },
+        {
+          "case_id": "gs_011",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.514
+        },
+        {
+          "case_id": "gs_012",
+          "category": "产品咨询",
+          "context_precision": 0.5,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7187
+        },
+        {
+          "case_id": "gs_013",
+          "category": "产品咨询",
+          "context_precision": 1.0,
+          "context_recall": 1.0,
+          "faithfulness": 0.9091,
+          "answer_relevancy": 0.8694
+        },
+        {
+          "case_id": "gs_014",
+          "category": "产品咨询",
+          "context_precision": 0.5,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5165
+        },
+        {
+          "case_id": "gs_015",
+          "category": "产品咨询",
+          "context_precision": 1.0,
+          "context_recall": 1.0,
+          "faithfulness": 0.9091,
+          "answer_relevancy": 0.7211
+        },
+        {
+          "case_id": "gs_016",
+          "category": "账户安全",
+          "context_precision": 1.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7416
+        },
+        {
+          "case_id": "gs_017",
+          "category": "账户安全",
+          "context_precision": 0.5,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7186
+        },
+        {
+          "case_id": "gs_018",
+          "category": "账户安全",
+          "context_precision": 1.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6264
+        },
+        {
+          "case_id": "gs_019",
+          "category": "账户安全",
+          "context_precision": 0.5,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5974
+        },
+        {
+          "case_id": "gs_020",
+          "category": "账户安全",
+          "context_precision": 0.5,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.732
+        },
+        {
+          "case_id": "gs_021",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5038
+        },
+        {
+          "case_id": "gs_022",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5397
+        },
+        {
+          "case_id": "gs_023",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4414
+        },
+        {
+          "case_id": "gs_024",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6233
+        },
+        {
+          "case_id": "gs_025",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5878
+        },
+        {
+          "case_id": "gs_026",
+          "category": "售后服务",
+          "context_precision": 0.5,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7398
+        },
+        {
+          "case_id": "gs_027",
+          "category": "售后服务",
+          "context_precision": 0.5,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6608
+        },
+        {
+          "case_id": "gs_028",
+          "category": "售后服务",
+          "context_precision": 0.5,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5793
+        },
+        {
+          "case_id": "gs_029",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5992
+        },
+        {
+          "case_id": "gs_030",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7603
+        },
+        {
+          "case_id": "gs_031",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6795
+        },
+        {
+          "case_id": "gs_032",
+          "category": "退款政策",
+          "context_precision": 0.5,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7429
+        },
+        {
+          "case_id": "gs_033",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5955
+        },
+        {
+          "case_id": "gs_034",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5458
+        },
+        {
+          "case_id": "gs_035",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4959
+        },
+        {
+          "case_id": "gs_036",
+          "category": "账户安全",
+          "context_precision": 0.5,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5619
+        },
+        {
+          "case_id": "gs_037",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.455
+        },
+        {
+          "case_id": "gs_038",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5626
+        },
+        {
+          "case_id": "gs_039",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.687
+        },
+        {
+          "case_id": "gs_040",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4858
+        },
+        {
+          "case_id": "gs_041",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4188
+        },
+        {
+          "case_id": "gs_042",
+          "category": "账户安全",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5471
+        },
+        {
+          "case_id": "gs_043",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.3614
+        },
+        {
+          "case_id": "gs_044",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7485
+        },
+        {
+          "case_id": "gs_045",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7387
+        },
+        {
+          "case_id": "gs_046",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.634
+        },
+        {
+          "case_id": "gs_047",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4167
+        },
+        {
+          "case_id": "gs_048",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4532
+        },
+        {
+          "case_id": "gs_049",
+          "category": "账户安全",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.59
+        },
+        {
+          "case_id": "gs_050",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.747
+        },
+        {
+          "case_id": "gs_051",
+          "category": "退款政策",
+          "context_precision": 0.5,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6941
+        },
+        {
+          "case_id": "gs_052",
+          "category": "产品咨询",
+          "context_precision": 0.5,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4673
+        },
+        {
+          "case_id": "gs_053",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6728
+        },
+        {
+          "case_id": "gs_054",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5261
+        },
+        {
+          "case_id": "gs_055",
+          "category": "账户安全",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5317
+        }
+      ]
+    },
+    {
+      "top_k": 3,
+      "metrics": {
+        "context_precision": 0.1576,
+        "context_recall": 0.3818,
+        "faithfulness": 0.9967,
+        "answer_relevancy": 0.6114
+      },
+      "weakest_metric": "context_precision",
+      "quadrant_distribution": {
+        "高召回 × 高忠实": {
+          "count": 21,
+          "diagnosis": "检索准、生成稳",
+          "direction": "保持，关注边界场景"
+        },
+        "低召回 × 高忠实": {
+          "count": 34,
+          "diagnosis": "漏召回，但模型诚实",
+          "direction": "优化切分 / 换 Embedding / 加 Rerank"
+        }
+      },
+      "category_metrics": {
+        "退款政策": {
+          "context_precision": 0.1667,
+          "context_recall": 0.4,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.686
+        },
+        "物流查询": {
+          "context_precision": 0.0741,
+          "context_recall": 0.1111,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5925
+        },
+        "产品咨询": {
+          "context_precision": 0.2667,
+          "context_recall": 0.6,
+          "faithfulness": 0.9818,
+          "answer_relevancy": 0.5901
+        },
+        "账户安全": {
+          "context_precision": 0.2963,
+          "context_recall": 0.6667,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6274
+        },
+        "功能使用": {
+          "context_precision": 0.0,
+          "context_recall": 0.2222,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4991
+        },
+        "售后服务": {
+          "context_precision": 0.125,
+          "context_recall": 0.25,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6747
+        }
+      },
+      "threshold_sweep": {
+        "0.65": {
+          "context_precision": 0.4061,
+          "context_recall": 0.8545
+        },
+        "0.70": {
+          "context_precision": 0.2485,
+          "context_recall": 0.6909
+        },
+        "0.75": {
+          "context_precision": 0.1576,
+          "context_recall": 0.3818
+        }
+      },
+      "cases": [
+        {
+          "case_id": "gs_001",
+          "category": "退款政策",
+          "context_precision": 0.6667,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6313
+        },
+        {
+          "case_id": "gs_002",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7994
+        },
+        {
+          "case_id": "gs_003",
+          "category": "退款政策",
+          "context_precision": 0.3333,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7335
+        },
+        {
+          "case_id": "gs_004",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.692
+        },
+        {
+          "case_id": "gs_005",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4615
+        },
+        {
+          "case_id": "gs_006",
+          "category": "物流查询",
+          "context_precision": 0.3333,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6964
+        },
+        {
+          "case_id": "gs_007",
+          "category": "物流查询",
+          "context_precision": 0.3333,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6929
+        },
+        {
+          "case_id": "gs_008",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6927
+        },
+        {
+          "case_id": "gs_009",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5477
+        },
+        {
+          "case_id": "gs_010",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5318
+        },
+        {
+          "case_id": "gs_011",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.514
+        },
+        {
+          "case_id": "gs_012",
+          "category": "产品咨询",
+          "context_precision": 0.3333,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7187
+        },
+        {
+          "case_id": "gs_013",
+          "category": "产品咨询",
+          "context_precision": 0.6667,
+          "context_recall": 1.0,
+          "faithfulness": 0.9091,
+          "answer_relevancy": 0.8694
+        },
+        {
+          "case_id": "gs_014",
+          "category": "产品咨询",
+          "context_precision": 0.6667,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5165
+        },
+        {
+          "case_id": "gs_015",
+          "category": "产品咨询",
+          "context_precision": 0.6667,
+          "context_recall": 1.0,
+          "faithfulness": 0.9091,
+          "answer_relevancy": 0.7211
+        },
+        {
+          "case_id": "gs_016",
+          "category": "账户安全",
+          "context_precision": 0.6667,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7416
+        },
+        {
+          "case_id": "gs_017",
+          "category": "账户安全",
+          "context_precision": 0.3333,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7186
+        },
+        {
+          "case_id": "gs_018",
+          "category": "账户安全",
+          "context_precision": 0.6667,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6264
+        },
+        {
+          "case_id": "gs_019",
+          "category": "账户安全",
+          "context_precision": 0.3333,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5974
+        },
+        {
+          "case_id": "gs_020",
+          "category": "账户安全",
+          "context_precision": 0.3333,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.732
+        },
+        {
+          "case_id": "gs_021",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5038
+        },
+        {
+          "case_id": "gs_022",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5397
+        },
+        {
+          "case_id": "gs_023",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4414
+        },
+        {
+          "case_id": "gs_024",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6233
+        },
+        {
+          "case_id": "gs_025",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5878
+        },
+        {
+          "case_id": "gs_026",
+          "category": "售后服务",
+          "context_precision": 0.3333,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7398
+        },
+        {
+          "case_id": "gs_027",
+          "category": "售后服务",
+          "context_precision": 0.3333,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6608
+        },
+        {
+          "case_id": "gs_028",
+          "category": "售后服务",
+          "context_precision": 0.3333,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5793
+        },
+        {
+          "case_id": "gs_029",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5992
+        },
+        {
+          "case_id": "gs_030",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7603
+        },
+        {
+          "case_id": "gs_031",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6795
+        },
+        {
+          "case_id": "gs_032",
+          "category": "退款政策",
+          "context_precision": 0.3333,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7429
+        },
+        {
+          "case_id": "gs_033",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5955
+        },
+        {
+          "case_id": "gs_034",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5458
+        },
+        {
+          "case_id": "gs_035",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4959
+        },
+        {
+          "case_id": "gs_036",
+          "category": "账户安全",
+          "context_precision": 0.3333,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5619
+        },
+        {
+          "case_id": "gs_037",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.455
+        },
+        {
+          "case_id": "gs_038",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5626
+        },
+        {
+          "case_id": "gs_039",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.687
+        },
+        {
+          "case_id": "gs_040",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4858
+        },
+        {
+          "case_id": "gs_041",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4188
+        },
+        {
+          "case_id": "gs_042",
+          "category": "账户安全",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5471
+        },
+        {
+          "case_id": "gs_043",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.3614
+        },
+        {
+          "case_id": "gs_044",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7485
+        },
+        {
+          "case_id": "gs_045",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7387
+        },
+        {
+          "case_id": "gs_046",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.634
+        },
+        {
+          "case_id": "gs_047",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4167
+        },
+        {
+          "case_id": "gs_048",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4532
+        },
+        {
+          "case_id": "gs_049",
+          "category": "账户安全",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.59
+        },
+        {
+          "case_id": "gs_050",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.747
+        },
+        {
+          "case_id": "gs_051",
+          "category": "退款政策",
+          "context_precision": 0.3333,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6941
+        },
+        {
+          "case_id": "gs_052",
+          "category": "产品咨询",
+          "context_precision": 0.3333,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4673
+        },
+        {
+          "case_id": "gs_053",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6728
+        },
+        {
+          "case_id": "gs_054",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5261
+        },
+        {
+          "case_id": "gs_055",
+          "category": "账户安全",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5317
+        }
+      ]
+    },
+    {
+      "top_k": 5,
+      "metrics": {
+        "context_precision": 0.0945,
+        "context_recall": 0.3818,
+        "faithfulness": 0.9967,
+        "answer_relevancy": 0.6114
+      },
+      "weakest_metric": "context_precision",
+      "quadrant_distribution": {
+        "高召回 × 高忠实": {
+          "count": 21,
+          "diagnosis": "检索准、生成稳",
+          "direction": "保持，关注边界场景"
+        },
+        "低召回 × 高忠实": {
+          "count": 34,
+          "diagnosis": "漏召回，但模型诚实",
+          "direction": "优化切分 / 换 Embedding / 加 Rerank"
+        }
+      },
+      "category_metrics": {
+        "退款政策": {
+          "context_precision": 0.1,
+          "context_recall": 0.4,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.686
+        },
+        "物流查询": {
+          "context_precision": 0.0444,
+          "context_recall": 0.1111,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5925
+        },
+        "产品咨询": {
+          "context_precision": 0.16,
+          "context_recall": 0.6,
+          "faithfulness": 0.9818,
+          "answer_relevancy": 0.5901
+        },
+        "账户安全": {
+          "context_precision": 0.1778,
+          "context_recall": 0.6667,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6274
+        },
+        "功能使用": {
+          "context_precision": 0.0,
+          "context_recall": 0.2222,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4991
+        },
+        "售后服务": {
+          "context_precision": 0.075,
+          "context_recall": 0.25,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6747
+        }
+      },
+      "threshold_sweep": {
+        "0.65": {
+          "context_precision": 0.2509,
+          "context_recall": 0.8545
+        },
+        "0.70": {
+          "context_precision": 0.1527,
+          "context_recall": 0.6909
+        },
+        "0.75": {
+          "context_precision": 0.0945,
+          "context_recall": 0.3818
+        }
+      },
+      "cases": [
+        {
+          "case_id": "gs_001",
+          "category": "退款政策",
+          "context_precision": 0.4,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6313
+        },
+        {
+          "case_id": "gs_002",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7994
+        },
+        {
+          "case_id": "gs_003",
+          "category": "退款政策",
+          "context_precision": 0.2,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7335
+        },
+        {
+          "case_id": "gs_004",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.692
+        },
+        {
+          "case_id": "gs_005",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4615
+        },
+        {
+          "case_id": "gs_006",
+          "category": "物流查询",
+          "context_precision": 0.2,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6964
+        },
+        {
+          "case_id": "gs_007",
+          "category": "物流查询",
+          "context_precision": 0.2,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6929
+        },
+        {
+          "case_id": "gs_008",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6927
+        },
+        {
+          "case_id": "gs_009",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5477
+        },
+        {
+          "case_id": "gs_010",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5318
+        },
+        {
+          "case_id": "gs_011",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.514
+        },
+        {
+          "case_id": "gs_012",
+          "category": "产品咨询",
+          "context_precision": 0.2,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7187
+        },
+        {
+          "case_id": "gs_013",
+          "category": "产品咨询",
+          "context_precision": 0.4,
+          "context_recall": 1.0,
+          "faithfulness": 0.9091,
+          "answer_relevancy": 0.8694
+        },
+        {
+          "case_id": "gs_014",
+          "category": "产品咨询",
+          "context_precision": 0.4,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5165
+        },
+        {
+          "case_id": "gs_015",
+          "category": "产品咨询",
+          "context_precision": 0.4,
+          "context_recall": 1.0,
+          "faithfulness": 0.9091,
+          "answer_relevancy": 0.7211
+        },
+        {
+          "case_id": "gs_016",
+          "category": "账户安全",
+          "context_precision": 0.4,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7416
+        },
+        {
+          "case_id": "gs_017",
+          "category": "账户安全",
+          "context_precision": 0.2,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7186
+        },
+        {
+          "case_id": "gs_018",
+          "category": "账户安全",
+          "context_precision": 0.4,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6264
+        },
+        {
+          "case_id": "gs_019",
+          "category": "账户安全",
+          "context_precision": 0.2,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5974
+        },
+        {
+          "case_id": "gs_020",
+          "category": "账户安全",
+          "context_precision": 0.2,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.732
+        },
+        {
+          "case_id": "gs_021",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5038
+        },
+        {
+          "case_id": "gs_022",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5397
+        },
+        {
+          "case_id": "gs_023",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4414
+        },
+        {
+          "case_id": "gs_024",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6233
+        },
+        {
+          "case_id": "gs_025",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5878
+        },
+        {
+          "case_id": "gs_026",
+          "category": "售后服务",
+          "context_precision": 0.2,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7398
+        },
+        {
+          "case_id": "gs_027",
+          "category": "售后服务",
+          "context_precision": 0.2,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6608
+        },
+        {
+          "case_id": "gs_028",
+          "category": "售后服务",
+          "context_precision": 0.2,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5793
+        },
+        {
+          "case_id": "gs_029",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5992
+        },
+        {
+          "case_id": "gs_030",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7603
+        },
+        {
+          "case_id": "gs_031",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6795
+        },
+        {
+          "case_id": "gs_032",
+          "category": "退款政策",
+          "context_precision": 0.2,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7429
+        },
+        {
+          "case_id": "gs_033",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5955
+        },
+        {
+          "case_id": "gs_034",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5458
+        },
+        {
+          "case_id": "gs_035",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4959
+        },
+        {
+          "case_id": "gs_036",
+          "category": "账户安全",
+          "context_precision": 0.2,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5619
+        },
+        {
+          "case_id": "gs_037",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.455
+        },
+        {
+          "case_id": "gs_038",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5626
+        },
+        {
+          "case_id": "gs_039",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.687
+        },
+        {
+          "case_id": "gs_040",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4858
+        },
+        {
+          "case_id": "gs_041",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4188
+        },
+        {
+          "case_id": "gs_042",
+          "category": "账户安全",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5471
+        },
+        {
+          "case_id": "gs_043",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.3614
+        },
+        {
+          "case_id": "gs_044",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7485
+        },
+        {
+          "case_id": "gs_045",
+          "category": "退款政策",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.7387
+        },
+        {
+          "case_id": "gs_046",
+          "category": "产品咨询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.634
+        },
+        {
+          "case_id": "gs_047",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4167
+        },
+        {
+          "case_id": "gs_048",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4532
+        },
+        {
+          "case_id": "gs_049",
+          "category": "账户安全",
+          "context_precision": 0.0,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.59
+        },
+        {
+          "case_id": "gs_050",
+          "category": "售后服务",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.747
+        },
+        {
+          "case_id": "gs_051",
+          "category": "退款政策",
+          "context_precision": 0.2,
+          "context_recall": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6941
+        },
+        {
+          "case_id": "gs_052",
+          "category": "产品咨询",
+          "context_precision": 0.2,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.4673
+        },
+        {
+          "case_id": "gs_053",
+          "category": "物流查询",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.6728
+        },
+        {
+          "case_id": "gs_054",
+          "category": "功能使用",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5261
+        },
+        {
+          "case_id": "gs_055",
+          "category": "账户安全",
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "faithfulness": 1.0,
+          "answer_relevancy": 0.5317
+        }
+      ]
+    }
+  ],
+  "recommended_top_k": 2
+}
