@@ -1,0 +1,33 @@
+{
+  "run_at": "2026-11-17T14:07:40.333097",
+  "case_count": 20,
+  "concurrency": 5,
+  "serial_seconds": 1.44,
+  "concurrent_seconds": 0.93,
+  "cached_seconds": 0.17,
+  "resume_seconds": 0.91,
+  "speedup": 1.55,
+  "cache_speedup": 8.47,
+  "per_case_seconds": 0.072,
+  "estimated_1000_serial_minutes": 1.2,
+  "estimated_1000_concurrent_minutes": 0.2,
+  "run_summary": {
+    "total": 20,
+    "success": 20,
+    "failed": 0,
+    "cached": 0,
+    "skipped": 0,
+    "failed_ids": []
+  },
+  "resume_summary": {
+    "total": 20,
+    "success": 20,
+    "failed": 0,
+    "cached": 0,
+    "skipped": 5,
+    "failed_ids": []
+  },
+  "simulated_io_serial_seconds": 6.43,
+  "simulated_io_concurrent_seconds": 1.39,
+  "simulated_io_speedup": 4.63
+}
