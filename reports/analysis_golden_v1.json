@@ -1,0 +1,297 @@
+{
+  "run_at": "2026-11-18T09:30:12.463698",
+  "source_report": "reports/baseline_golden_v1.json",
+  "case_count": 55,
+  "badcase_count": 55,
+  "total_score": 13.08,
+  "category_stats": {
+    "退款政策": {
+      "count": 10,
+      "share": 0.182,
+      "sample_ids": [
+        "gs_001",
+        "gs_002",
+        "gs_003"
+      ],
+      "top_failed_metrics": [
+        [
+          "answer_relevancy",
+          10
+        ],
+        [
+          "context_precision",
+          10
+        ],
+        [
+          "context_recall",
+          7
+        ]
+      ]
+    },
+    "产品咨询": {
+      "count": 10,
+      "share": 0.182,
+      "sample_ids": [
+        "gs_011",
+        "gs_012",
+        "gs_013"
+      ],
+      "top_failed_metrics": [
+        [
+          "answer_relevancy",
+          6
+        ],
+        [
+          "context_precision",
+          6
+        ],
+        [
+          "correctness",
+          4
+        ]
+      ]
+    },
+    "物流查询": {
+      "count": 9,
+      "share": 0.164,
+      "sample_ids": [
+        "gs_006",
+        "gs_007",
+        "gs_008"
+      ],
+      "top_failed_metrics": [
+        [
+          "answer_relevancy",
+          9
+        ],
+        [
+          "context_precision",
+          9
+        ],
+        [
+          "context_recall",
+          7
+        ]
+      ]
+    },
+    "账户安全": {
+      "count": 9,
+      "share": 0.164,
+      "sample_ids": [
+        "gs_016",
+        "gs_017",
+        "gs_018"
+      ],
+      "top_failed_metrics": [
+        [
+          "answer_relevancy",
+          9
+        ],
+        [
+          "context_precision",
+          9
+        ],
+        [
+          "context_recall",
+          5
+        ]
+      ]
+    },
+    "功能使用": {
+      "count": 9,
+      "share": 0.164,
+      "sample_ids": [
+        "gs_021",
+        "gs_022",
+        "gs_023"
+      ],
+      "top_failed_metrics": [
+        [
+          "answer_relevancy",
+          9
+        ],
+        [
+          "context_precision",
+          9
+        ],
+        [
+          "context_recall",
+          6
+        ]
+      ]
+    },
+    "售后服务": {
+      "count": 8,
+      "share": 0.145,
+      "sample_ids": [
+        "gs_026",
+        "gs_027",
+        "gs_028"
+      ],
+      "top_failed_metrics": [
+        [
+          "answer_relevancy",
+          8
+        ],
+        [
+          "context_precision",
+          8
+        ],
+        [
+          "context_recall",
+          6
+        ]
+      ]
+    }
+  },
+  "clusters": [
+    {
+      "cluster_id": 2,
+      "size": 14,
+      "label": "发货 / 收到 / 快递",
+      "sample_questions": [
+        "怎么查物流？",
+        "发货后多久能收到？",
+        "可以指定快递吗？"
+      ],
+      "case_ids": [
+        "gs_006",
+        "gs_007",
+        "gs_009",
+        "gs_010",
+        "gs_021",
+        "gs_022",
+        "gs_023",
+        "gs_025",
+        "gs_026",
+        "gs_027",
+        "gs_033",
+        "gs_043",
+        "gs_047",
+        "gs_053"
+      ]
+    },
+    {
+      "cluster_id": 3,
+      "size": 12,
+      "label": "账号 / 密码 / 手机",
+      "sample_questions": [
+        "怎么修改密码？",
+        "忘记密码怎么办？",
+        "手机号换了，怎么改绑？"
+      ],
+      "case_ids": [
+        "gs_016",
+        "gs_017",
+        "gs_018",
+        "gs_019",
+        "gs_020",
+        "gs_024",
+        "gs_036",
+        "gs_037",
+        "gs_042",
+        "gs_048",
+        "gs_049",
+        "gs_055"
+      ]
+    },
+    {
+      "cluster_id": 1,
+      "size": 11,
+      "label": "退款 / 多久 / 分期",
+      "sample_questions": [
+        "你们的退款政策是什么？",
+        "退款多久能到账？",
+        "我收到商品已经第8天了，还能退款吗？"
+      ],
+      "case_ids": [
+        "gs_001",
+        "gs_002",
+        "gs_003",
+        "gs_004",
+        "gs_005",
+        "gs_031",
+        "gs_032",
+        "gs_039",
+        "gs_045",
+        "gs_051",
+        "gs_054"
+      ]
+    },
+    {
+      "cluster_id": 0,
+      "size": 9,
+      "label": "X1 / 支持 / 多少",
+      "sample_questions": [
+        "这款手机的电池容量是多少？",
+        "X1和X1 Pro有什么区别？",
+        "支持无线充电吗？"
+      ],
+      "case_ids": [
+        "gs_011",
+        "gs_013",
+        "gs_014",
+        "gs_015",
+        "gs_034",
+        "gs_035",
+        "gs_040",
+        "gs_041",
+        "gs_052"
+      ]
+    },
+    {
+      "cluster_id": 4,
+      "size": 9,
+      "label": "保修 / 修期 / 维修",
+      "sample_questions": [
+        "物流三天没更新了怎么办？",
+        "保修期是多久？",
+        "商品有质量问题怎么办？"
+      ],
+      "case_ids": [
+        "gs_008",
+        "gs_012",
+        "gs_028",
+        "gs_029",
+        "gs_030",
+        "gs_038",
+        "gs_044",
+        "gs_046",
+        "gs_050"
+      ]
+    }
+  ],
+  "failed_metric_counter": {
+    "answer_relevancy": 51,
+    "context_precision": 51,
+    "context_recall": 35,
+    "correctness": 7
+  },
+  "suggestions": [
+    {
+      "priority": 1,
+      "action": "接入真实 LLM 后重跑基线",
+      "evidence": "当前 model=mock (no API key)，答案由检索片段拼接，正确性不具参考性"
+    },
+    {
+      "priority": 2,
+      "action": "把 CP/CR 相关性阈值从 0.75 校准到 0.65-0.70",
+      "evidence": "Day 11 实测：阈值 0.65 时 Recall 0.855，0.75 时仅 0.382；期望片段与检索片段最大相似度均值仅 0.7223"
+    },
+    {
+      "priority": 3,
+      "action": "扩充知识库到 50+ 片段，并补充同义问法",
+      "evidence": "当前仅 13 个片段，top-2 已覆盖全部可召回内容，检索能力无提升空间"
+    },
+    {
+      "priority": 4,
+      "action": "优先修复「退款政策」类问题（10 条，占 badcase 18.2%）",
+      "evidence": "该类失败最多，主要失败指标: answer_relevancy×10, context_precision×10, context_recall×7"
+    },
+    {
+      "priority": 5,
+      "action": "针对最大 badcase 簇「发货 / 收到 / 快递」设计专项用例",
+      "evidence": "该簇 14 条，示例问题: 怎么查物流？；发货后多久能收到？"
+    }
+  ]
+}
