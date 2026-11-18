@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>AI 问答评测报告 · {{ report.dataset }} · {{ report.run_at[:10] }}</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1b1f24; --muted:#6b7280;
+    --line:#e6e8eb; --fail:#d92d20; --pass:#0f9d58; --warn:#f59e0b;
+    --bar:#2f6feb; --chip:#f3f4f6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:14px/1.65 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+  h1{font-size:22px;margin:0 0 4px}
+  h2{font-size:16px;margin:0 0 14px}
+  .sub{color:var(--muted);font-size:13px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;
+        padding:20px 22px;margin-bottom:18px}
+  /* 结论区 */
+  .verdict{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap}
+  .score{font-size:44px;font-weight:700;line-height:1.1}
+  .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;
+         font-weight:600;color:#fff}
+  .badge.fail{background:var(--fail)} .badge.pass{background:var(--pass)}
+  .badge.warn{background:var(--warn)}
+  .cause{flex:1;min-width:300px}
+  .cause p{margin:6px 0}
+  ol.actions{margin:8px 0 0 18px;padding:0}
+  ol.actions li{margin:6px 0}
+  .evidence{color:var(--muted);font-size:12.5px}
+  /* 指标卡 */
+  .metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .metric{border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+  .metric .name{font-size:13px;color:var(--muted)}
+  .metric .val{font-size:22px;font-weight:650;margin:2px 0 8px}
+  .track{height:6px;background:#eef1f4;border-radius:3px;overflow:hidden}
+  .fill{height:100%;background:var(--bar);border-radius:3px}
+  .fill.low{background:var(--fail)}
+  /* 表格 */
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:12.5px}
+  td.num{font-variant-numeric:tabular-nums}
+  /* 类别柱状 */
+  .row{display:flex;align-items:center;gap:10px;margin:7px 0}
+  .row .lab{width:92px;color:var(--muted);font-size:13px}
+  .row .track{flex:1}
+  .row .cnt{width:52px;text-align:right;font-size:13px}
+  /* badcase */
+  details{border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:9px 0;
+          background:#fff}
+  details[open]{background:#fcfcfd}
+  summary{cursor:pointer;font-weight:600}
+  summary .q{font-weight:600}
+  .kv{margin:10px 0 0;display:grid;grid-template-columns:92px 1fr;gap:6px 10px;font-size:13px}
+  .kv .k{color:var(--muted)}
+  .ans{white-space:pre-wrap;word-break:break-word;max-height:220px;overflow:auto;
+       background:var(--chip);border-radius:6px;padding:8px 10px}
+  .chip{display:inline-block;background:#fdeceb;color:#b42318;border-radius:6px;
+        padding:1px 7px;margin:0 4px 4px 0;font-size:12px}
+  .foot{color:var(--muted);font-size:12.5px;margin-top:24px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 结论区：第一屏必须让读者知道该做什么决定 -->
+  <div class="card">
+    <div class="sub">{{ report.dataset }} · Prompt {{ report.prompt_version }} · 模型 {{ report.model }}</div>
+    <h1>AI 问答评测报告 v1</h1>
+    <div class="verdict" style="margin-top:16px">
+      <div>
+        <div class="score">{{ report.total_score }}<span style="font-size:18px;color:#6b7280"> / 100</span></div>
+        <div style="margin-top:6px">
+          <span class="badge {{ verdict.cls }}">{{ verdict.label }}</span>
+          <span class="sub">上线门槛 {{ verdict.gate }} 分</span>
+        </div>
+      </div>
+      <div class="cause">
+        <p><strong>主要问题：</strong>{{ verdict.cause }}</p>
+        <p class="evidence">{{ verdict.evidence }}</p>
+        <p style="margin-top:12px"><strong>建议优先做：</strong></p>
+        <ol class="actions">
+          {% for a in verdict.actions %}
+          <li>{{ a.action }}<div class="evidence">依据：{{ a.evidence }}</div></li>
+          {% endfor %}
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- 指标 -->
+  <div class="card">
+    <h2>指标明细（{{ report.case_count }} 条用例）</h2>
+    <div class="metrics">
+      {% for m in metrics %}
+      <div class="metric">
+        <div class="name">{{ m.label }}</div>
+        <div class="val">{{ m.value }}</div>
+        <div class="track"><div class="fill {% if m.ratio < 50 %}low{% endif %}"
+             style="width:{{ m.ratio }}%"></div></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- 数据集横向对比 -->
+  <div class="card">
+    <h2>三类数据集横向对比</h2>
+    <table>
+      <tr><th>数据集</th><th>用例数</th><th>总分</th><th>等级</th><th>Badcase</th></tr>
+      {% for d in datasets %}
+      <tr>
+        <td>{{ d.name }}</td>
+        <td class="num">{{ d.case_count }}</td>
+        <td class="num">{{ d.total_score }}</td>
+        <td>{{ d.grade }}</td>
+        <td class="num">{{ d.badcase_count }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <!-- 失败分布 -->
+  <div class="card">
+    <h2>Badcase 按业务类别分布</h2>
+    {% for c in categories %}
+    <div class="row">
+      <div class="lab">{{ c.name }}</div>
+      <div class="track"><div class="fill low" style="width:{{ c.width }}%"></div></div>
+      <div class="cnt">{{ c.count }} 条</div>
+    </div>
+    {% endfor %}
+    <p class="evidence" style="margin-top:10px">{{ category_note }}</p>
+  </div>
+
+  <!-- badcase -->
+  <div class="card">
+    <h2>Badcase 明细（展示前 {{ badcases|length }} 条，共 {{ report.badcase_count }} 条）</h2>
+    {% for b in badcases %}
+    <details>
+      <summary><span class="q">{{ b.id }} · {{ b.question }}</span></summary>
+      <div class="kv">
+        <div class="k">模型回答</div><div class="ans">{{ b.answer }}</div>
+        <div class="k">标准答案</div><div>{{ b.ground_truth }}</div>
+        <div class="k">检索片段</div><div>{{ b.context_count }} 条</div>
+        <div class="k">失败指标</div>
+        <div>{% for f in b.failed_metrics %}<span class="chip">{{ f.metric }} {{ f.score }}＜{{ f.threshold }}</span>{% endfor %}</div>
+      </div>
+    </details>
+    {% endfor %}
+  </div>
+
+  <!-- 原始数据 -->
+  <div class="card">
+    <h2>原始数据</h2>
+    <p class="evidence">报告为单文件自包含，可离线打开、直接转发。</p>
+    <p><a download="baseline_golden_v1.json" href="{{ raw_data_uri }}">下载原始评测数据（JSON，含全部 {{ report.case_count }} 条 badcase）</a></p>
+  </div>
+
+  <div class="foot">
+    生成时间 {{ generated_at }} · embedding {{ report.embedding_model }} ·
+    执行引擎 {{ report.engine }} · 应用异常 {{ report.app_error_count }} 条
+  </div>
+</div>
+</body>
+</html>
