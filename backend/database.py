@@ -1,0 +1,31 @@
+"""数据库连接与会话管理"""
+import os
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
+
+from backend.config import DATABASE_URL
+
+if DATABASE_URL.startswith("sqlite"):
+    os.makedirs(os.path.dirname(DATABASE_URL.replace("sqlite:///", "")), exist_ok=True)
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+else:
+    engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+
+SessionLocal = sessionmaker(bind=engine, autoflush=False)
+Base = declarative_base()
+
+
+def get_db():
+    """FastAPI 依赖：每个请求一个会话"""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+def init_db():
+    """开发期自动建表；生产用 sql/schema.sql 迁移"""
+    from backend.models import dataset, prompt, run  # noqa: F401  注册模型
+    Base.metadata.create_all(engine)

@@ -1,0 +1,57 @@
+"""
+FastAPI 应用入口
+
+启动：python -m uvicorn backend.main:app --reload --port 8000
+文档：http://localhost:8000/docs
+"""
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+from backend.config import API_TITLE, API_VERSION
+from backend.database import init_db
+from backend.routers import datasets, prompts, runs
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    yield
+
+
+app = FastAPI(title=API_TITLE, version=API_VERSION, lifespan=lifespan)
+
+# 前端本地开发端口
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.on_event("startup")
+def on_startup():
+    init_db()
+
+
+@app.exception_handler(HTTPException)
+async def http_error_handler(request: Request, exc: HTTPException):
+    """统一错误体：{code, message}"""
+    if isinstance(exc.detail, dict) and "code" in exc.detail:
+        body = exc.detail
+    else:
+        body = {"code": "INTERNAL_ERROR", "message": str(exc.detail)}
+    return JSONResponse(status_code=exc.status_code, content=body)
+
+
+@app.get("/api/health")
+def health():
+    return {"status": "ok", "version": API_VERSION}
+
+
+app.include_router(datasets.router)
+app.include_router(prompts.router)
+app.include_router(runs.router)

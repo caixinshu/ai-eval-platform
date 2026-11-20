@@ -15,3 +15,6 @@ chroma_db_test*/
 # HuggingFace 模型缓存
 .cache/
 hf_cache/
+
+# 后端本地 SQLite
+data/
