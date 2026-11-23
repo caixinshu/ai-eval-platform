@@ -314,3 +314,49 @@ def test_recover_stale_running_runs(api):
     assert "重启" in stale.error_message
     assert db.get(EvalRun, "run_done_ok").status == "done"
     db.close()
+
+
+# ---------------- Day 18：前端页面 ----------------
+
+def test_frontend_pages_served(api):
+    """静态页由后端统一托管：首页跳转页、页面、样式与脚本都可访问"""
+    client, _ = api
+    index = client.get("/")
+    assert index.status_code == 200
+    assert "tasks.html" in index.text
+
+    for path, text in (("/pages/datasets.html", "数据集管理"),
+                       ("/pages/new-run.html", "发起评测"),
+                       ("/pages/tasks.html", "任务列表"),
+                       ("/pages/run-detail.html", "评测结果")):
+        resp = client.get(path)
+        assert resp.status_code == 200, path
+        assert text in resp.text
+
+    assert client.get("/assets/app.css").status_code == 200
+    js = client.get("/assets/api.js")
+    assert js.status_code == 200
+    # Windows 注册表可能把 .js 映射成 text/plain，浏览器会拒绝执行 ES module
+    assert "javascript" in js.headers["content-type"]
+    assert client.get("/poll.js").status_code == 200
+
+
+def test_results_include_ground_truth(api, monkeypatch):
+    """结果列表补齐标准答案，供 badcase 展开对照"""
+    client, _ = api
+    from backend.services import eval_service
+
+    monkeypatch.setattr(eval_service, "ask_question",
+                        lambda case: {"answer": "支持7天无理由退款"})
+    monkeypatch.setattr(eval_service, "_semantic_score", lambda answer, truth: 1.0)
+
+    ds = _create_dataset(client)
+    _upload(client, ds["id"], [{
+        "id": "g001", "question": "退款政策是什么",
+        "ground_truth": "支持7天无理由退款",
+    }])
+    run_id = client.post("/api/runs", json={"dataset_id": ds["id"],
+                                            "prompt_version": "v1"}).json()["run_id"]
+
+    results = client.get("/api/runs/%s/results" % run_id).json()
+    assert results["items"][0]["ground_truth"] == "支持7天无理由退款"

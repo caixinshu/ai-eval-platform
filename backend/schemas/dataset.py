@@ -1,4 +1,5 @@
 """数据集相关契约"""
+from datetime import datetime
 from typing import Any, List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -20,6 +21,7 @@ class DatasetOut(BaseModel):
     description: Optional[str] = None
     case_count: int
     version: str
+    created_at: Optional[datetime] = None
 
 
 class CaseIn(BaseModel):

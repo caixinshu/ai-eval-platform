@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>数据集管理 · AI 评测平台</title>
+  <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="toolbar">
+      <div>
+        <h2>数据集管理</h2>
+        <p class="muted">查看数据集、预览用例、上传 JSON 用例文件</p>
+      </div>
+      <div class="toolbar-actions">
+        <button class="btn ghost" id="refreshBtn">刷新</button>
+        <button class="btn" id="createBtn">新建数据集</button>
+        <button class="btn primary" id="uploadBtn">上传数据集</button>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>名称</th><th>类型</th><th>用例数</th><th>版本</th><th>创建时间</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="rows">
+            <tr><td colspan="6" class="empty">加载中…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 用例预览 -->
+  <div class="modal-mask hidden" id="previewModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="previewTitle">用例预览</h3>
+        <button class="icon-btn" data-close aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" id="previewBody"></div>
+      <div class="modal-foot">
+        <button class="btn ghost" id="previewPrev">上一页</button>
+        <span class="muted" id="previewPage"></span>
+        <button class="btn ghost" id="previewNext">下一页</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新建数据集 -->
+  <div class="modal-mask hidden" id="createModal">
+    <div class="modal slim">
+      <div class="modal-head">
+        <h3>新建数据集</h3>
+        <button class="icon-btn" data-close aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="createName">名称</label>
+          <input class="control" id="createName" placeholder="如：黄金集" maxlength="100">
+        </div>
+        <div class="field">
+          <label for="createType">类型</label>
+          <select class="control" id="createType">
+            <option value="golden">黄金集（标准问答）</option>
+            <option value="edge">边界集（极端输入）</option>
+            <option value="adversarial">对抗集（安全与注入）</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="createVersion">版本</label>
+          <input class="control" id="createVersion" value="v1">
+        </div>
+        <div class="field">
+          <label for="createDesc">描述（可选）</label>
+          <input class="control" id="createDesc" placeholder="这份数据集的用途">
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn ghost" data-close>取消</button>
+        <button class="btn primary" id="createSubmit">创建</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 上传用例 -->
+  <div class="modal-mask hidden" id="uploadModal">
+    <div class="modal slim">
+      <div class="modal-head">
+        <h3>上传数据集</h3>
+        <button class="icon-btn" data-close aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="uploadDataset">目标数据集</label>
+          <select class="control" id="uploadDataset"></select>
+        </div>
+        <div class="field">
+          <label for="uploadFile">JSON 文件</label>
+          <input class="control" id="uploadFile" type="file" accept=".json,application/json">
+          <p class="hint">支持数组或 {cases: [...]}；重复 ID 自动跳过，不会覆盖已有用例</p>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn ghost" data-close>取消</button>
+        <button class="btn primary" id="uploadSubmit">上传</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { api, postJson, esc, fmtTime, toast, typeLabel, setLoading, confirmAction } from "/assets/api.js";
+    import { renderNav } from "/assets/layout.js";
+
+    renderNav("datasets");
+
+    const rows = document.getElementById("rows");
+    const previewBody = document.getElementById("previewBody");
+    const previewTitle = document.getElementById("previewTitle");
+    const previewPage = document.getElementById("previewPage");
+    const previewPrev = document.getElementById("previewPrev");
+    const previewNext = document.getElementById("previewNext");
+    const uploadDataset = document.getElementById("uploadDataset");
+
+    let datasets = [];
+    let preview = { datasetId: "", name: "", page: 1, total: 0, pageSize: 10 };
+
+    const modal = (id) => document.getElementById(id);
+    const openModal = (id) => modal(id).classList.remove("hidden");
+    const closeModal = (id) => modal(id).classList.add("hidden");
+
+    document.querySelectorAll("[data-close]").forEach((btn) => {
+      btn.addEventListener("click", () => btn.closest(".modal-mask").classList.add("hidden"));
+    });
+    document.querySelectorAll(".modal-mask").forEach((mask) => {
+      mask.addEventListener("click", (e) => {
+        if (e.target === mask) mask.classList.add("hidden");
+      });
+    });
+
+    async function loadDatasets() {
+      rows.innerHTML = `<tr><td colspan="6" class="empty">加载中…</td></tr>`;
+      try {
+        const data = await api("/api/datasets?page=1&page_size=100");
+        datasets = data.items;
+        renderDatasets();
+        renderUploadOptions();
+      } catch (err) {
+        rows.innerHTML = `<tr><td colspan="6" class="empty">加载失败：${esc(err.message)}</td></tr>`;
+        toast(err.message, "error");
+      }
+    }
+
+    function renderDatasets() {
+      if (!datasets.length) {
+        rows.innerHTML = `<tr><td colspan="6" class="empty">
+          还没有数据集，点击右上角「新建数据集」创建一个，再上传 JSON 用例
+        </td></tr>`;
+        return;
+      }
+      rows.innerHTML = datasets.map((d) => `
+        <tr>
+          <td>
+            <b>${esc(d.name)}</b>
+            ${d.description ? `<div class="muted" style="font-size:12.5px">${esc(d.description)}</div>` : ""}
+          </td>
+          <td><span class="tag">${esc(typeLabel(d.type))}</span></td>
+          <td>${d.case_count}</td>
+          <td>${esc(d.version)}</td>
+          <td>${fmtTime(d.created_at)}</td>
+          <td>
+            <button class="btn small ghost" data-preview="${esc(d.id)}">预览</button>
+            <button class="btn small ghost" data-upload="${esc(d.id)}">上传</button>
+          </td>
+        </tr>`).join("");
+
+      rows.querySelectorAll("[data-preview]").forEach((btn) => {
+        btn.addEventListener("click", () => openPreview(btn.dataset.preview));
+      });
+      rows.querySelectorAll("[data-upload]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          uploadDataset.value = btn.dataset.upload;
+          openModal("uploadModal");
+        });
+      });
+    }
+
+    function renderUploadOptions() {
+      if (!datasets.length) {
+        uploadDataset.innerHTML = `<option value="">请先新建数据集</option>`;
+        return;
+      }
+      const current = uploadDataset.value;
+      uploadDataset.innerHTML = datasets.map((d) => (
+        `<option value="${esc(d.id)}">${esc(d.name)} @ ${esc(d.version)}（${d.case_count} 条）</option>`
+      )).join("");
+      if (current) uploadDataset.value = current;
+    }
+
+    /* ---------- 用例预览 ---------- */
+    async function loadPreviewPage() {
+      previewBody.innerHTML = `<p class="muted">加载中…</p>`;
+      try {
+        const query = new URLSearchParams({
+          page: String(preview.page), page_size: String(preview.pageSize),
+        });
+        const data = await api(`/api/datasets/${encodeURIComponent(preview.datasetId)}/cases?` + query);
+        preview.total = data.total;
+        renderPreviewItems(data.items);
+        const pages = Math.max(1, Math.ceil(data.total / preview.pageSize));
+        previewPage.textContent = `第 ${preview.page} / ${pages} 页 · 共 ${data.total} 条`;
+        previewPrev.disabled = preview.page <= 1;
+        previewNext.disabled = preview.page >= pages;
+      } catch (err) {
+        previewBody.innerHTML = `<p class="empty">加载失败：${esc(err.message)}</p>`;
+        toast(err.message, "error");
+      }
+    }
+
+    function renderPreviewItems(items) {
+      if (!items.length) {
+        previewBody.innerHTML = `<p class="empty">这个数据集还没有用例，先上传 JSON 文件</p>`;
+        return;
+      }
+      previewBody.innerHTML = `
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ID</th><th>问题</th><th>分类</th><th>难度</th><th>标准答案</th></tr></thead>
+            <tbody>
+              ${items.map((c) => `
+                <tr>
+                  <td>${esc(c.id)}</td>
+                  <td>${esc(c.question)}</td>
+                  <td>${esc(c.category || "—")}</td>
+                  <td>${esc(c.difficulty || "—")}</td>
+                  <td class="muted">${esc((c.ground_truth || "—").slice(0, 100))}</td>
+                </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>`;
+    }
+
+    function openPreview(datasetId) {
+      const ds = datasets.find((d) => d.id === datasetId);
+      preview = { datasetId, name: ds ? ds.name : datasetId, page: 1, total: 0, pageSize: 10 };
+      previewTitle.textContent = `用例预览 · ${preview.name}`;
+      openModal("previewModal");
+      loadPreviewPage();
+    }
+
+    previewPrev.addEventListener("click", () => { preview.page -= 1; loadPreviewPage(); });
+    previewNext.addEventListener("click", () => { preview.page += 1; loadPreviewPage(); });
+
+    /* ---------- 新建数据集 ---------- */
+    document.getElementById("createBtn").addEventListener("click", () => {
+      document.getElementById("createName").value = "";
+      document.getElementById("createVersion").value = "v1";
+      document.getElementById("createDesc").value = "";
+      openModal("createModal");
+      document.getElementById("createName").focus();
+    });
+
+    document.getElementById("createSubmit").addEventListener("click", async (e) => {
+      const btn = e.currentTarget;
+      const name = document.getElementById("createName").value.trim();
+      if (!name) {
+        toast("请填写数据集名称", "error");
+        return;
+      }
+      setLoading(btn, true, "创建中…");
+      try {
+        await postJson("/api/datasets", {
+          name,
+          type: document.getElementById("createType").value,
+          version: document.getElementById("createVersion").value.trim() || "v1",
+          description: document.getElementById("createDesc").value.trim() || null,
+        });
+        toast(`数据集「${name}」创建成功`, "success");
+        closeModal("createModal");
+        await loadDatasets();
+      } catch (err) {
+        toast(err.message, "error");
+      } finally {
+        setLoading(btn, false);
+      }
+    });
+
+    /* ---------- 上传 JSON ---------- */
+    document.getElementById("uploadBtn").addEventListener("click", () => {
+      renderUploadOptions();
+      openModal("uploadModal");
+    });
+
+    document.getElementById("uploadSubmit").addEventListener("click", async (e) => {
+      const btn = e.currentTarget;
+      const datasetId = uploadDataset.value;
+      const fileInput = document.getElementById("uploadFile");
+      const file = fileInput.files[0];
+
+      if (!datasetId) { toast("请先新建数据集", "error"); return; }
+      if (!file) { toast("请选择 JSON 文件", "error"); return; }
+
+      const ds = datasets.find((d) => d.id === datasetId);
+      const dsName = ds ? `${ds.name} @ ${ds.version}` : datasetId;
+      if (!confirmAction(`确认把「${file.name}」导入数据集「${dsName}」？\n重复用例会自动跳过。`)) return;
+
+      setLoading(btn, true, "上传中…");
+      try {
+        const form = new FormData();
+        form.append("file", file);
+        const result = await api(
+          `/api/datasets/upload?dataset_id=${encodeURIComponent(datasetId)}`,
+          { method: "POST", body: form },
+        );
+        toast(`导入 ${result.imported} 条，跳过 ${result.skipped} 条，当前共 ${result.case_count} 条`, "success");
+        fileInput.value = "";
+        closeModal("uploadModal");
+        await loadDatasets();
+      } catch (err) {
+        toast(err.message, "error");
+      } finally {
+        setLoading(btn, false);
+      }
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", loadDatasets);
+    loadDatasets();
+  </script>
+</body>
+</html>

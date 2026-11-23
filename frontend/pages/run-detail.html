@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>评测结果 · AI 评测平台</title>
+  <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="toolbar">
+      <div>
+        <h2>评测结果</h2>
+        <p class="muted" id="runSubtitle">加载中…</p>
+      </div>
+      <div class="toolbar-actions">
+        <a class="btn ghost" href="/pages/tasks.html">返回任务列表</a>
+        <a class="btn ghost hidden" id="jsonBtn" href="#" download>下载 JSON</a>
+        <a class="btn primary hidden" id="htmlBtn" href="#" target="_blank">查看 HTML 报告</a>
+      </div>
+    </div>
+
+    <div id="pageError" class="alert hidden"></div>
+    <div id="runError" class="alert hidden"></div>
+
+    <div class="card hidden" id="runningCard">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <b>评测执行中</b><span class="muted" id="runProgressText">0%</span>
+      </div>
+      <div class="progress" style="height:9px"><i id="runProgressFill"></i></div>
+      <p class="muted" id="runProgressMeta" style="margin:8px 0 0">正在获取进度…</p>
+    </div>
+
+    <div class="card hidden" id="summaryCard">
+      <div class="score-hero">
+        <div>
+          <div class="score"><span id="totalScore">0</span><small> / 100</small></div>
+          <div class="sub" id="scoreHint"></div>
+        </div>
+        <div id="summaryStatus"></div>
+      </div>
+      <div class="detail-meta" style="margin-top:16px" id="runMeta"></div>
+    </div>
+
+    <div class="card hidden" id="metricsCard">
+      <h3>分项指标</h3>
+      <div class="cards" id="metricCards"></div>
+      <p class="muted" style="margin:12px 0 0;font-size:12.5px">规则与语义指标取值 0~1，低于 0.6 标红；答案正确性通过线为 0.84。</p>
+    </div>
+
+    <div class="card hidden" id="compareCard">
+      <h3>与上次评测对比</h3>
+      <div id="compareBody"></div>
+    </div>
+
+    <div class="card hidden" id="badcaseCard">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h3 style="margin:0">Badcase</h3>
+        <span class="muted" id="badcaseTotal"></span>
+      </div>
+      <div class="badcase-list" id="badcaseList"></div>
+      <div class="pager">
+        <button class="btn ghost small" id="badcasePrev">上一页</button>
+        <span class="muted" id="badcasePage"></span>
+        <button class="btn ghost small" id="badcaseNext">下一页</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import {
+      api, esc, fmtTime, fmtDuration, statusBadge, statusLabel,
+      metricLabel, toast,
+    } from "/assets/api.js";
+    import { renderNav } from "/assets/layout.js";
+    import { pollRunStatus } from "/poll.js";
+
+    renderNav("tasks");
+
+    const params = new URLSearchParams(window.location.search);
+    const runId = params.get("run_id");
+    const PAGE_SIZE = 10;
+
+    let run = null;
+    let badcasePage = 1;
+    let pollTask = null;
+
+    const el = (id) => document.getElementById(id);
+
+    function showPageError(message) {
+      el("pageError").textContent = message;
+      el("pageError").classList.remove("hidden");
+    }
+
+    function scoreHint(score) {
+      if (score >= 80) return "可上线";
+      if (score >= 70) return "有条件通过";
+      return "不可上线";
+    }
+
+    function renderSummary() {
+      el("summaryCard").classList.remove("hidden");
+      const score = Number(run.total_score || 0);
+      el("totalScore").textContent = score.toFixed(1);
+      el("summaryStatus").innerHTML = statusBadge(run.status);
+      el("scoreHint").textContent = run.status === "done"
+        ? `${scoreHint(score)} · 通过率按用例统计见下方指标`
+        : `${statusLabel(run.status)}，展示已完成部分的数据`;
+      el("runSubtitle").textContent = `${run.id} · Prompt ${run.prompt_version}`;
+      el("runMeta").innerHTML = [
+        ["数据集", report.dataset || "—"],
+        ["Prompt 版本", run.prompt_version],
+        ["模型", run.model_name || "默认（本地）"],
+        ["用例数", run.total_cases ?? "—"],
+        ["耗时", fmtDuration(run.started_at, run.finished_at)],
+        ["开始时间", fmtTime(run.started_at)],
+      ].map(([k, v]) => `<span>${k}：<b>${esc(v)}</b></span>`).join("");
+
+      if (report.total) {
+        el("runMeta").insertAdjacentHTML("beforeend",
+          `<span>通过：<b>${report.passed}</b> / ${report.total}</span>`);
+      }
+    }
+
+    function renderMetrics() {
+      const metrics = report.metrics || {};
+      const keys = Object.keys(metrics);
+      if (!keys.length) return;
+      el("metricsCard").classList.remove("hidden");
+      el("metricCards").innerHTML = keys.map((key) => {
+        const value = Number(metrics[key]);
+        const delta = compareData && compareData.metrics[key];
+        let hint = "";
+        if (delta) {
+          const sign = delta.delta > 0 ? "+" : "";
+          hint = `较上次 ${sign}${delta.delta.toFixed(4)}`;
+        } else if (key === "correctness") {
+          hint = "通过线 0.84";
+        }
+        return `
+          <div class="metric-card${value < 0.6 ? " warn" : ""}">
+            <div class="label">${esc(metricLabel(key))}</div>
+            <div class="value">${value.toFixed(4)}</div>
+            <div class="hint">${esc(hint)}</div>
+          </div>`;
+      }).join("");
+    }
+
+    function renderCompare() {
+      el("compareCard").classList.remove("hidden");
+      const body = el("compareBody");
+      if (run.status !== "done") {
+        body.innerHTML = `<p class="muted">任务完成后才能进行版本对比。</p>`;
+        return;
+      }
+      if (!previousRun) {
+        body.innerHTML = `<p class="muted">这是该数据集的首个已完成评测，暂无可对比基线。</p>`;
+        return;
+      }
+      if (!compareData) {
+        body.innerHTML = `<p class="muted">基线对比加载失败，稍后刷新重试。</p>`;
+        return;
+      }
+
+      const totalDelta = compareData.total.delta;
+      const totalCls = totalDelta > 0 ? "delta-up" : totalDelta < 0 ? "delta-down" : "delta-flat";
+      const rows = Object.entries(compareData.metrics).map(([key, d]) => {
+        const cls = d.delta > 0 ? "delta-up" : d.delta < 0 ? "delta-down" : "delta-flat";
+        return `<tr>
+          <td>${esc(metricLabel(key))}</td>
+          <td>${d.current.toFixed(4)}</td>
+          <td class="muted">${d.baseline.toFixed(4)}</td>
+          <td class="${cls}">${d.delta > 0 ? "+" : ""}${d.delta.toFixed(4)}</td>
+          <td>${d.significant ? '<span class="tag">显著</span>' : '<span class="muted">噪声内</span>'}</td>
+        </tr>`;
+      }).join("");
+
+      const notices = [];
+      if (compareData.regressions.length) {
+        notices.push(`<div class="alert">回归指标：${compareData.regressions.map(metricLabel).map(esc).join("、")}</div>`);
+      }
+      if (compareData.improvements.length) {
+        notices.push(`<div class="alert info">提升指标：${compareData.improvements.map(metricLabel).map(esc).join("、")}</div>`);
+      }
+
+      body.innerHTML = `
+        ${notices.join("")}
+        <div class="table-scroll">
+          <table class="compare-table">
+            <thead><tr><th>指标</th><th>本次</th><th>上次</th><th>变化</th><th>判断</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><b>总分</b></td>
+                <td><b>${compareData.total.current.toFixed(2)}</b></td>
+                <td class="muted">${compareData.total.baseline.toFixed(2)}</td>
+                <td class="${totalCls}"><b>${totalDelta > 0 ? "+" : ""}${totalDelta.toFixed(2)}</b></td>
+                <td>${compareData.total.significant ? '<span class="tag">显著</span>' : '<span class="muted">噪声内</span>'}</td>
+              </tr>
+              ${rows}
+            </tbody>
+          </table>
+        </div>
+        <p class="muted" style="margin:10px 0 0;font-size:12.5px">
+          基线任务：<a href="/pages/run-detail.html?run_id=${encodeURIComponent(previousRun.id)}">${esc(previousRun.id)}</a>
+          · 变化在 ±3 个百分点内视为评测噪声
+        </p>`;
+    }
+
+    async function loadBadcases() {
+      if (run.status === "pending" || run.status === "running") {
+        el("badcaseCard").classList.add("hidden");
+        return;
+      }
+      el("badcaseCard").classList.remove("hidden");
+      el("badcaseList").innerHTML = `<p class="muted">加载中…</p>`;
+      try {
+        const query = new URLSearchParams({
+          passed: "false", page: String(badcasePage), page_size: String(PAGE_SIZE),
+        });
+        const data = await api(`/api/runs/${encodeURIComponent(runId)}/results?` + query);
+        el("badcaseTotal").textContent = `共 ${data.total} 条失败用例`;
+        renderBadcases(data.items);
+        const pages = Math.max(1, Math.ceil(data.total / PAGE_SIZE));
+        el("badcasePage").textContent = data.total ? `第 ${badcasePage} / ${pages} 页` : "";
+        el("badcasePrev").disabled = badcasePage <= 1;
+        el("badcaseNext").disabled = badcasePage >= pages;
+      } catch (err) {
+        el("badcaseList").innerHTML = `<p class="empty">加载失败：${esc(err.message)}</p>`;
+      }
+    }
+
+    function renderBadcases(items) {
+      if (!items.length) {
+        el("badcaseList").innerHTML = `<p class="empty">没有失败用例，全部通过</p>`;
+        return;
+      }
+      el("badcaseList").innerHTML = items.map((item) => {
+        const metrics = item.metrics || {};
+        const failedTags = Object.entries(metrics)
+          .filter(([, v]) => typeof v === "number" && v < 0.6)
+          .map(([k, v]) => `<span class="tag">${esc(metricLabel(k))} ${Number(v).toFixed(2)}</span>`)
+          .join("");
+        return `
+          <details class="badcase">
+            <summary>
+              <span class="tag">${esc(item.case_id)}</span>
+              <span class="q">${esc(item.question || "—")}</span>
+              ${failedTags || '<span class="tag">未通过</span>'}
+            </summary>
+            <div class="body">
+              <div class="kv">
+                <div class="k">问题</div><div class="v">${esc(item.question || "—")}</div>
+                <div class="k">回答</div><div class="v">${esc(item.answer || "（空）")}</div>
+                <div class="k">标准答案</div><div class="v">${esc(item.ground_truth || "—")}</div>
+                <div class="k">指标</div><div class="v">${Object.entries(metrics)
+                  .map(([k, v]) => `${esc(metricLabel(k))} ${Number(v).toFixed(4)}`).join("　") || "—"}</div>
+                <div class="k">耗时</div><div class="v">${item.duration_ms ?? "—"} ms</div>
+              </div>
+            </div>
+          </details>`;
+      }).join("");
+    }
+
+    function startPolling() {
+      el("runningCard").classList.remove("hidden");
+      pollTask = pollRunStatus(runId, {
+        interval: 2000,
+        onProgress: (status) => {
+          el("runProgressText").textContent = `${status.progress}%`;
+          el("runProgressFill").style.width = `${status.progress}%`;
+          el("runProgressMeta").textContent =
+            `已处理 ${status.processed} / ${status.total} 条` +
+            (status.failed ? ` · 失败 ${status.failed} 条` : "");
+        },
+        onFinish: (status) => {
+          toast(`任务已${statusLabel(status.status)}，正在刷新结果`, "success");
+          setTimeout(() => window.location.reload(), 800);
+        },
+      });
+    }
+
+    let report = {};
+    let compareData = null;
+    let previousRun = null;
+
+    async function loadAll() {
+      if (!runId) {
+        showPageError("缺少 run_id 参数，请从任务列表进入");
+        return;
+      }
+      try {
+        run = await api(`/api/runs/${encodeURIComponent(runId)}`);
+        report = await api(`/api/runs/${encodeURIComponent(runId)}/report`);
+
+        el("jsonBtn").href = `/api/runs/${encodeURIComponent(runId)}/report?format=json`;
+        el("htmlBtn").href = `/api/runs/${encodeURIComponent(runId)}/report?format=html`;
+        el("jsonBtn").classList.remove("hidden");
+        el("htmlBtn").classList.remove("hidden");
+
+        if (run.status === "failed" && run.error_message) {
+          el("runError").textContent = `任务失败：${run.error_message}`;
+          el("runError").classList.remove("hidden");
+        }
+        if (run.status === "cancelled") {
+          el("runError").textContent = "任务已取消，以下为已完成部分的结果。";
+          el("runError").classList.remove("hidden");
+          el("runError").classList.add("info");
+        }
+
+        renderSummary();
+
+        if (run.status === "pending" || run.status === "running") {
+          startPolling();
+          renderCompare();
+          return;
+        }
+
+        // 找同数据集的上一次已完成评测（开始时间早于当前任务）
+        const runsData = await api("/api/runs?page=1&page_size=100");
+        previousRun = runsData.items.find((r) => (
+          r.id !== run.id && r.dataset_id === run.dataset_id && r.status === "done"
+          && r.started_at && run.started_at && r.started_at < run.started_at
+        )) || null;
+
+        if (previousRun) {
+          try {
+            compareData = await api("/api/runs/compare", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ run_id_a: run.id, run_id_b: previousRun.id }),
+            });
+          } catch (err) {
+            compareData = null;
+          }
+        }
+
+        renderMetrics();
+        renderCompare();
+        await loadBadcases();
+      } catch (err) {
+        showPageError(err.message);
+        toast(err.message, "error");
+      }
+    }
+
+    el("badcasePrev").addEventListener("click", () => {
+      badcasePage = Math.max(1, badcasePage - 1);
+      loadBadcases();
+    });
+    el("badcaseNext").addEventListener("click", () => {
+      badcasePage += 1;
+      loadBadcases();
+    });
+    window.addEventListener("beforeunload", () => { if (pollTask) pollTask.stop(); });
+
+    loadAll();
+  </script>
+</body>
+</html>

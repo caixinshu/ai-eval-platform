@@ -97,7 +97,16 @@ def list_results(run_id: str, passed: bool = Query(default=None), page: int = 1,
     if passed is not None:
         query = query.filter(EvalResult.passed == passed)
     result = paginate(query.order_by(EvalResult.case_id), page, page_size)
-    result["items"] = [ResultOut.model_validate(r) for r in result["items"]]
+
+    # 标准答案存在用例表，按 case_id 批量补齐，便于前端展示 badcase 对照
+    case_ids = [r.case_id for r in result["items"]]
+    truths = dict(db.query(TestCase.id, TestCase.ground_truth)
+                  .filter(TestCase.id.in_(case_ids)).all()) if case_ids else {}
+    result["items"] = [
+        ResultOut.model_validate(r).model_copy(
+            update={"ground_truth": truths.get(r.case_id)})
+        for r in result["items"]
+    ]
     return result
 
 

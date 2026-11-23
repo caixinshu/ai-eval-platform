@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>任务列表 · AI 评测平台</title>
+  <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="toolbar">
+      <div>
+        <h2>任务列表</h2>
+        <p class="muted">评测在后台执行，存在未完成任务时每 3 秒自动刷新</p>
+      </div>
+      <div class="toolbar-actions">
+        <select id="statusFilter" class="control" style="width:130px;height:36px">
+          <option value="">全部状态</option>
+          <option value="running">运行中</option>
+          <option value="pending">排队中</option>
+          <option value="done">已完成</option>
+          <option value="failed">失败</option>
+          <option value="cancelled">已取消</option>
+        </select>
+        <button class="btn ghost" id="refreshBtn">刷新</button>
+        <a class="btn primary" href="/pages/new-run.html">发起评测</a>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>任务</th><th>数据集</th><th>Prompt</th><th>状态</th>
+              <th>进度</th><th>总分</th><th>耗时</th><th>开始时间</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="rows">
+            <tr><td colspan="9" class="empty">加载中…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="pager">
+      <button class="btn ghost" id="prevBtn">上一页</button>
+      <span id="pageInfo" class="muted">第 1 / 1 页</span>
+      <button class="btn ghost" id="nextBtn">下一页</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { api, statusBadge, fmtTime, fmtDuration, esc, toast } from "/assets/api.js";
+    import { renderNav } from "/assets/layout.js";
+
+    renderNav("tasks");
+
+    const PAGE_SIZE = 10;
+    const rows = document.getElementById("rows");
+    const pageInfo = document.getElementById("pageInfo");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const statusFilter = document.getElementById("statusFilter");
+    const refreshBtn = document.getElementById("refreshBtn");
+
+    let page = 1;
+    let total = 0;
+    let timer = null;
+    const datasetNames = {};
+    let namesLoaded = false;
+
+    async function ensureDatasetNames() {
+      if (namesLoaded) return;
+      const data = await api("/api/datasets?page=1&page_size=100");
+      data.items.forEach((d) => { datasetNames[d.id] = d.name; });
+      namesLoaded = true;
+    }
+
+    function renderRows(items) {
+      if (!items.length) {
+        rows.innerHTML = `<tr><td colspan="9" class="empty">
+          暂无任务，点击右上角「发起评测」开始第一次评测
+        </td></tr>`;
+        return;
+      }
+      rows.innerHTML = items.map((r) => {
+        const score = r.total_score === null || r.total_score === undefined
+          ? "—" : Number(r.total_score).toFixed(2);
+        const progress = Math.max(0, Math.min(100, r.progress || 0));
+        const detailUrl = `/pages/run-detail.html?run_id=${encodeURIComponent(r.id)}`;
+        const errorTip = r.error_message ? ` title="${esc(r.error_message)}"` : "";
+        return `
+          <tr${errorTip}>
+            <td><a href="${detailUrl}">${esc(r.id)}</a></td>
+            <td>${esc(datasetNames[r.dataset_id] || r.dataset_id || "—")}</td>
+            <td>${esc(r.prompt_version || "—")}</td>
+            <td>${statusBadge(r.status)}</td>
+            <td>
+              <div class="progress-line">
+                <div class="progress"><i style="width:${progress}%"></i></div>
+                <span class="progress-text">${progress}%</span>
+              </div>
+            </td>
+            <td>${score}</td>
+            <td>${fmtDuration(r.started_at, r.finished_at)}</td>
+            <td>${fmtTime(r.started_at)}</td>
+            <td><a href="${detailUrl}">查看</a></td>
+          </tr>`;
+      }).join("");
+    }
+
+    function renderPager() {
+      const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      pageInfo.textContent = `第 ${page} / ${pages} 页 · 共 ${total} 条`;
+      prevBtn.disabled = page <= 1;
+      nextBtn.disabled = page >= pages;
+    }
+
+    async function load() {
+      clearTimeout(timer);
+      rows.innerHTML = `<tr><td colspan="9" class="empty">加载中…</td></tr>`;
+      try {
+        await ensureDatasetNames();
+        const query = new URLSearchParams({ page: String(page), page_size: String(PAGE_SIZE) });
+        if (statusFilter.value) query.set("status", statusFilter.value);
+        const data = await api("/api/runs?" + query.toString());
+        total = data.total;
+        renderRows(data.items);
+        renderPager();
+        const active = data.items.some((r) => r.status === "running" || r.status === "pending");
+        if (active) timer = setTimeout(load, 3000);
+      } catch (err) {
+        rows.innerHTML = `<tr><td colspan="9" class="empty">加载失败：${esc(err.message)}</td></tr>`;
+        toast(err.message, "error");
+      }
+    }
+
+    refreshBtn.addEventListener("click", () => {
+      namesLoaded = false;
+      load();
+    });
+    statusFilter.addEventListener("change", () => { page = 1; load(); });
+    prevBtn.addEventListener("click", () => { page = Math.max(1, page - 1); load(); });
+    nextBtn.addEventListener("click", () => { page += 1; load(); });
+
+    load();
+  </script>
+</body>
+</html>

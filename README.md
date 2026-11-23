@@ -31,6 +31,10 @@ python scripts\generate_report.py
 
 # 3. 测试
 python -m pytest tests -q
+
+# 4. 启动平台（前端静态页由后端托管）
+python -m uvicorn backend.main:app --port 8000
+# 打开 http://localhost:8000/
 ```
 
 产物：`reports/baseline_*_v1.json`、`reports/analysis_golden_v1.json`、`reports/report_v1.html`。
@@ -41,7 +45,7 @@ python -m pytest tests -q
 
 ```mermaid
 flowchart LR
-    U[用户] --> FE["前端 SPA<br/>React + Vite + ECharts"]
+    U[用户] --> FE["前端页面<br/>HTML + ES Module + ECharts"]
     FE -->|REST / JSON| API["API 层<br/>FastAPI + Pydantic"]
     API --> TASK["任务层<br/>asyncio 后台任务"]
     TASK --> ENG["评测引擎<br/>规则 · 语义 · Judge · RAG"]
@@ -60,17 +64,21 @@ app/            被测 RAG 应用（retrieve / generate / ask）
 evaluation/     四层评测器
 engine/         执行引擎（并发/重试/缓存/断点）
 analysis/       分组统计 / badcase 聚类 / 版本对比
+backend/        平台后端（FastAPI 接口 + 异步任务）
+frontend/       平台前端（数据集 / 发起评测 / 任务 / 结果页）
 eval_datasets/  黄金集 55 · 对抗集 25 · 边界集 17 · 校准集 50
 scripts/        基线、校准、分析、报告、性能实验
 templates/      HTML 报告模板
 sql/            数据库 Schema
 docs/           每日设计与实验记录
-tests/          45 条单元测试
+tests/          62 条测试
 ```
 
 ## 文档
 
 - 架构设计：`docs/day15-architecture.md`
+- 平台后端：`docs/day16-backend-api.md`、`docs/day17-async-tasks.md`
+- 平台前端：`docs/day18-frontend.md`
 - 评测体系：`docs/day6-evaluation-framework.md`、`docs/day11-rag-evaluator.md`
 - 执行引擎：`docs/day12-eval-engine.md`
 - 分析与报告：`docs/day13-analysis.md`、`docs/day14-html-report.md`

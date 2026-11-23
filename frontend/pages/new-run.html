@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>发起评测 · AI 评测平台</title>
+  <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="toolbar">
+      <div>
+        <h2>发起评测</h2>
+        <p class="muted">选择数据集与 Prompt 版本，评测在后台执行，可实时查看进度</p>
+      </div>
+    </div>
+
+    <div id="formError" class="alert hidden"></div>
+
+    <form class="form-card" id="runForm">
+      <div class="field">
+        <label for="datasetSelect">选择数据集</label>
+        <select class="control" id="datasetSelect"></select>
+        <p class="hint" id="datasetHint">加载中…</p>
+      </div>
+
+      <div class="field">
+        <label for="promptSelect">选择 Prompt 版本</label>
+        <select class="control" id="promptSelect"></select>
+        <p class="hint">没有合适的版本？<a href="#" id="newPromptLink">新建 Prompt 版本</a></p>
+      </div>
+
+      <div class="field">
+        <label for="modelSelect">模型</label>
+        <select class="control" id="modelSelect">
+          <option value="">默认（本地 mock）</option>
+          <option value="gpt-4o-mini">gpt-4o-mini</option>
+          <option value="deepseek-chat">deepseek-chat</option>
+        </select>
+      </div>
+
+      <button class="btn primary" id="startBtn" type="submit">开始评测</button>
+    </form>
+
+    <div class="card progress-card hidden" id="progressBox" style="max-width:560px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <b id="progressStatus">已提交</b>
+        <span class="muted" id="progressText">0%</span>
+      </div>
+      <div class="progress" style="height:9px"><i id="progressFill"></i></div>
+      <p class="muted" id="progressMeta" style="margin:8px 0 12px">正在启动…</p>
+      <button class="btn danger small" id="cancelBtn">取消评测</button>
+    </div>
+  </div>
+
+  <!-- 新建 Prompt 版本 -->
+  <div class="modal-mask hidden" id="promptModal">
+    <div class="modal slim">
+      <div class="modal-head">
+        <h3>新建 Prompt 版本</h3>
+        <button class="icon-btn" data-close aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="promptName">名称</label>
+          <input class="control" id="promptName" placeholder="如：客服问答" maxlength="100">
+        </div>
+        <div class="field">
+          <label for="promptVersion">版本号</label>
+          <input class="control" id="promptVersion" value="v1.0.0">
+        </div>
+        <div class="field">
+          <label for="promptContent">Prompt 内容</label>
+          <textarea class="control" id="promptContent" placeholder="你是客服助手，请基于资料回答…"></textarea>
+        </div>
+        <div class="field">
+          <label for="promptDesc">描述（可选）</label>
+          <input class="control" id="promptDesc">
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn ghost" data-close>取消</button>
+        <button class="btn primary" id="promptSubmit">创建</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { api, postJson, esc, toast, setLoading, confirmAction, statusLabel } from "/assets/api.js";
+    import { renderNav } from "/assets/layout.js";
+    import { pollRunStatus, cancelRun } from "/poll.js";
+
+    renderNav("new-run");
+
+    const datasetSelect = document.getElementById("datasetSelect");
+    const promptSelect = document.getElementById("promptSelect");
+    const modelSelect = document.getElementById("modelSelect");
+    const datasetHint = document.getElementById("datasetHint");
+    const formError = document.getElementById("formError");
+    const startBtn = document.getElementById("startBtn");
+    const progressBox = document.getElementById("progressBox");
+    const progressStatus = document.getElementById("progressStatus");
+    const progressText = document.getElementById("progressText");
+    const progressFill = document.getElementById("progressFill");
+    const progressMeta = document.getElementById("progressMeta");
+    const cancelBtn = document.getElementById("cancelBtn");
+
+    const modal = (id) => document.getElementById(id);
+    const openModal = (id) => modal(id).classList.remove("hidden");
+    const closeModal = (id) => modal(id).classList.add("hidden");
+
+    document.querySelectorAll("[data-close]").forEach((btn) => {
+      btn.addEventListener("click", () => btn.closest(".modal-mask").classList.add("hidden"));
+    });
+
+    let datasets = [];
+    let task = null;
+    let currentRunId = "";
+
+    async function loadOptions() {
+      datasetHint.textContent = "加载中…";
+      try {
+        const [dsData, promptData] = await Promise.all([
+          api("/api/datasets?page=1&page_size=100"),
+          api("/api/prompts?page=1&page_size=100"),
+        ]);
+        datasets = dsData.items;
+
+        if (!datasets.length) {
+          datasetSelect.innerHTML = `<option value="">暂无数据集，请先到「数据集」页创建</option>`;
+          datasetHint.textContent = "还没有数据集";
+        } else {
+          datasetSelect.innerHTML = datasets.map((d) => (
+            `<option value="${esc(d.id)}">${esc(d.name)} @ ${esc(d.version)}（${d.case_count} 条）</option>`
+          )).join("");
+          updateDatasetHint();
+        }
+
+        if (!promptData.items.length) {
+          promptSelect.innerHTML = `<option value="">暂无 Prompt 版本，请先新建</option>`;
+        } else {
+          promptSelect.innerHTML = promptData.items.map((p) => (
+            `<option value="${esc(p.version)}">${esc(p.name)} @ ${esc(p.version)}</option>`
+          )).join("");
+        }
+      } catch (err) {
+        datasetHint.textContent = "加载失败";
+        showError(err.message);
+        toast(err.message, "error");
+      }
+    }
+
+    function updateDatasetHint() {
+      const ds = datasets.find((d) => d.id === datasetSelect.value);
+      datasetHint.textContent = ds
+        ? `共 ${ds.case_count} 条用例 · 类型 ${ds.type}`
+        : "";
+    }
+
+    function showError(message) {
+      formError.textContent = message;
+      formError.classList.remove("hidden");
+    }
+
+    datasetSelect.addEventListener("change", updateDatasetHint);
+
+    document.getElementById("newPromptLink").addEventListener("click", (e) => {
+      e.preventDefault();
+      document.getElementById("promptName").value = "";
+      document.getElementById("promptVersion").value = "v1.0.0";
+      document.getElementById("promptContent").value = "";
+      document.getElementById("promptDesc").value = "";
+      openModal("promptModal");
+      document.getElementById("promptName").focus();
+    });
+
+    document.getElementById("promptSubmit").addEventListener("click", async (e) => {
+      const btn = e.currentTarget;
+      const payload = {
+        name: document.getElementById("promptName").value.trim(),
+        version: document.getElementById("promptVersion").value.trim(),
+        content: document.getElementById("promptContent").value.trim(),
+        description: document.getElementById("promptDesc").value.trim() || null,
+      };
+      if (!payload.name || !payload.version || !payload.content) {
+        toast("名称、版本号、Prompt 内容都不能为空", "error");
+        return;
+      }
+      setLoading(btn, true, "创建中…");
+      try {
+        const created = await postJson("/api/prompts", payload);
+        toast(`Prompt「${created.name} @ ${created.version}」创建成功`, "success");
+        closeModal("promptModal");
+        await loadOptions();
+        promptSelect.value = created.version;
+      } catch (err) {
+        toast(err.message, "error");
+      } finally {
+        setLoading(btn, false);
+      }
+    });
+
+    function renderProgress(status) {
+      const progress = Math.max(0, Math.min(100, status.progress || 0));
+      progressStatus.textContent = statusLabel(status.status);
+      progressText.textContent = `${progress}%`;
+      progressFill.style.width = `${progress}%`;
+      progressMeta.textContent =
+        `已处理 ${status.processed} / ${status.total} 条` +
+        (status.failed ? ` · 失败 ${status.failed} 条` : "");
+    }
+
+    document.getElementById("runForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      formError.classList.add("hidden");
+
+      const datasetId = datasetSelect.value;
+      const promptVersion = promptSelect.value;
+      if (!datasetId) { showError("请选择数据集"); return; }
+      if (!promptVersion) { showError("请选择 Prompt 版本，可点击下方链接新建"); return; }
+
+      const ds = datasets.find((d) => d.id === datasetId);
+      if (!confirmAction(`确认对「${ds ? ds.name : datasetId}」发起评测？\n共 ${ds ? ds.case_count : "?"} 条用例，执行期间不要关闭后台服务。`)) return;
+
+      setLoading(startBtn, true, "提交中…");
+      try {
+        const created = await postJson("/api/runs", {
+          dataset_id: datasetId,
+          prompt_version: promptVersion,
+          model: modelSelect.value || null,
+        });
+        currentRunId = created.run_id;
+        toast("评测已提交，正在后台执行", "success");
+
+        progressBox.classList.remove("hidden");
+        progressStatus.textContent = "排队中";
+        progressText.textContent = "0%";
+        progressFill.style.width = "0%";
+        progressMeta.textContent = `任务 ${currentRunId}`;
+        cancelBtn.disabled = false;
+        cancelBtn.textContent = "取消评测";
+
+        task = pollRunStatus(currentRunId, {
+          interval: 2000,
+          onProgress: renderProgress,
+          onFinish: (status) => {
+            renderProgress(status);
+            cancelBtn.disabled = true;
+            const tips = { done: "评测完成", failed: "评测失败", cancelled: "评测已取消" };
+            toast(tips[status.status] || "任务已结束",
+                  status.status === "done" ? "success" : "error");
+            setTimeout(() => {
+              window.location.href = `/pages/run-detail.html?run_id=${encodeURIComponent(currentRunId)}`;
+            }, 800);
+          },
+          onError: (err) => {
+            progressMeta.textContent = `状态获取失败：${err.message}，2 秒后重试`;
+          },
+        });
+      } catch (err) {
+        showError(err.message);
+        toast(err.message, "error");
+      } finally {
+        setLoading(startBtn, false);
+      }
+    });
+
+    cancelBtn.addEventListener("click", async () => {
+      if (!currentRunId) return;
+      if (!confirmAction("确认取消这次评测？已完成的用例会保留。")) return;
+      cancelBtn.disabled = true;
+      try {
+        await cancelRun(currentRunId);
+        toast("已请求取消，当前用例执行完即停止", "success");
+      } catch (err) {
+        cancelBtn.disabled = false;
+        toast(err.message, "error");
+      }
+    });
+
+    window.addEventListener("beforeunload", () => { if (task) task.stop(); });
+
+    loadOptions();
+  </script>
+</body>
+</html>

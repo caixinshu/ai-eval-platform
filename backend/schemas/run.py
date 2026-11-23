@@ -1,4 +1,5 @@
 """评测任务契约"""
+from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -29,6 +30,9 @@ class RunOut(BaseModel):
     progress: int
     total_cases: Optional[int] = None
     total_score: Optional[float] = None
+    started_at: Optional[datetime] = None
+    finished_at: Optional[datetime] = None
+    error_message: Optional[str] = None
 
 
 class RunStatus(BaseModel):
@@ -48,6 +52,7 @@ class ResultOut(BaseModel):
     metrics: Optional[Dict[str, Any]] = None
     passed: Optional[bool] = None
     duration_ms: Optional[int] = None
+    ground_truth: Optional[str] = None
 
 
 class CompareRequest(BaseModel):
