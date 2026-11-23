@@ -29,3 +29,15 @@ def init_db():
     """开发期自动建表；生产用 sql/schema.sql 迁移"""
     from backend.models import dataset, prompt, run  # noqa: F401  注册模型
     Base.metadata.create_all(engine)
+    _migrate_sqlite()
+
+
+def _migrate_sqlite():
+    """SQLite 开发库轻量迁移：create_all 不会给已有表加列，这里补齐新增字段"""
+    if not DATABASE_URL.startswith("sqlite"):
+        return
+    with engine.begin() as conn:
+        columns = [row[1] for row in conn.exec_driver_sql("PRAGMA table_info(eval_runs)")]
+        if "cancel_requested" not in columns:
+            conn.exec_driver_sql(
+                "ALTER TABLE eval_runs ADD COLUMN cancel_requested BOOLEAN DEFAULT 0")

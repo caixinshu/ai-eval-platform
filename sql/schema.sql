@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS eval_runs (
     model_name      VARCHAR(100),
     judge_model     VARCHAR(100),
     status          VARCHAR(20) DEFAULT 'pending',   -- pending/running/done/failed/cancelled
+    cancel_requested BOOLEAN DEFAULT FALSE,          -- 取消标记：执行循环逐条检查后中止
     progress        INT DEFAULT 0,                   -- 0-100，前端进度条
     total_cases     INT,
     total_score     DECIMAL(5, 2),

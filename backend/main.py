@@ -13,11 +13,14 @@ from fastapi.responses import JSONResponse
 from backend.config import API_TITLE, API_VERSION
 from backend.database import init_db
 from backend.routers import datasets, prompts, runs
+from backend.services.eval_service import recover_stale_runs
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    # 上次进程退出时 running 的任务不可能继续，统一置 failed，避免前端无限轮询
+    recover_stale_runs()
     yield
 
 

@@ -64,6 +64,19 @@ def get_run(run_id: str, db: Session = Depends(get_db)):
     return RunOut.model_validate(run)
 
 
+@router.post("/{run_id}/cancel")
+def cancel_run(run_id: str, db: Session = Depends(get_db)):
+    """请求取消：只置标记，执行循环处理下一条时自行中止"""
+    run = db.get(EvalRun, run_id)
+    if run is None:
+        api_error(404, "NOT_FOUND", "任务不存在: %s" % run_id)
+    if run.status not in ("pending", "running"):
+        api_error(400, "INVALID_PARAM", "任务已结束，无法取消: %s" % run.status)
+    run.cancel_requested = True
+    db.commit()
+    return {"run_id": run_id, "status": run.status, "cancel_requested": True}
+
+
 @router.get("/{run_id}/status", response_model=RunStatus)
 def get_status(run_id: str, db: Session = Depends(get_db)):
     run = db.get(EvalRun, run_id)

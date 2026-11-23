@@ -10,6 +10,10 @@
 用法：
     runner = EvalRunner(concurrency=5)
     results = asyncio.run(runner.run(cases, qa_func, "v1.2.0", checkpoint=ckpt))
+
+长任务扩展（Day 17）：
+- on_result：每完成一条（含命中缓存）回调一次，便于实时落库/上报进度
+- should_stop：每个 worker 开始前检查一次，返回 True 则剩余用例标记 skipped（取消/超时）
 """
 import asyncio
 import hashlib
@@ -80,7 +84,14 @@ class EvalRunner:
 
     # ---- 主流程 ----
     async def run(self, cases: list, qa_func, prompt_version: str,
-                  checkpoint=None) -> list:
+                  checkpoint=None, on_result=None, should_stop=None,
+                  use_cache: bool = True) -> list:
+        """执行整批用例
+
+        on_result: 可选异步回调，参数为 TaskResult，每完成一条调用一次
+        should_stop: 可选同步判断函数，每处理一条前检查，True 则剩余用例跳过
+        use_cache: 为 False 时不读不写缓存（评测服务避免跨轮次复用旧回答）
+        """
         sem = asyncio.Semaphore(self.concurrency)
         # 预分配保证结果顺序与输入一致
         results = [None] * len(cases)
@@ -88,28 +99,44 @@ class EvalRunner:
         async def worker(idx: int, case: dict):
             async with sem:
                 case_id = case["id"]
+
+                # 取消/超时：不再发起新调用，标记跳过
+                if should_stop is not None and should_stop():
+                    results[idx] = TaskResult(case_id, False, skipped=True,
+                                              error="已取消")
+                    if on_result is not None:
+                        await on_result(results[idx])
+                    return
+
                 key = self._cache_key(case, prompt_version)
 
                 # 断点续跑：已完成直接复用缓存
                 if checkpoint is not None and checkpoint.is_done(case_id):
-                    cached = self._get_cache(key)
+                    cached = self._get_cache(key) if use_cache else None
                     results[idx] = TaskResult(case_id, True, cached or {},
                                               cached=True, skipped=True)
+                    if on_result is not None:
+                        await on_result(results[idx])
                     return
 
-                cached = self._get_cache(key)
+                cached = self._get_cache(key) if use_cache else None
                 if cached is not None:
                     results[idx] = TaskResult(case_id, True, cached, cached=True)
                     if checkpoint is not None:
                         checkpoint.mark_done(case_id)
+                    if on_result is not None:
+                        await on_result(results[idx])
                     return
 
                 r = await self._run_with_retry(qa_func, case)
                 if r.success:
-                    self._set_cache(key, r.data)
+                    if use_cache:
+                        self._set_cache(key, r.data)
                     if checkpoint is not None:
                         checkpoint.mark_done(case_id)
                 results[idx] = r
+                if on_result is not None:
+                    await on_result(r)
 
         await asyncio.gather(*[worker(i, c) for i, c in enumerate(cases)])
         return results

@@ -14,7 +14,8 @@ class EvalRun(Base):
     prompt_version = Column(String(20), nullable=False)
     model_name = Column(String(100))
     judge_model = Column(String(100))
-    status = Column(String(20), default="pending")     # pending/running/done/failed
+    status = Column(String(20), default="pending")     # pending/running/done/failed/cancelled
+    cancel_requested = Column(Boolean, default=False)  # 前端点取消置 True，执行循环逐条检查
     progress = Column(Integer, default=0)
     total_cases = Column(Integer)
     total_score = Column(Numeric(5, 2))
