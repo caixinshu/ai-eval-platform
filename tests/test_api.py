@@ -433,3 +433,78 @@ def test_dashboard_empty(api):
     assert data["trend"] == []
     assert data["categories"] == []
     assert data["compare"] is None
+
+
+# ---------------- Day 20-21：联调 ----------------
+
+def test_long_run_progress_and_pagination(api, monkeypatch):
+    """长任务：120 条用例跑完进度 100，分页不重复不遗漏"""
+    client, _ = api
+    from backend.services import eval_service
+
+    monkeypatch.setattr(eval_service, "ask_question",
+                        lambda case: {"answer": "支持7天无理由退款，请放心购买。"})
+    ds = _create_dataset(client, name="长任务集")
+    cases = [{"id": "L%03d" % i, "question": "退款问题 %d" % i}
+             for i in range(1, 121)]
+    assert _upload(client, ds["id"], cases).status_code == 200
+
+    run_id = client.post("/api/runs", json={"dataset_id": ds["id"],
+                                            "prompt_version": "v1"}).json()["run_id"]
+    status = client.get("/api/runs/%s/status" % run_id).json()
+    assert status["status"] == "done"
+    assert status["progress"] == 100
+    assert status["processed"] == 120
+
+    collected = []
+    for page in (1, 2, 3):
+        data = client.get("/api/runs/%s/results?page=%d&page_size=50"
+                          % (run_id, page)).json()
+        assert data["total"] == 120
+        collected.extend(item["case_id"] for item in data["items"])
+    assert len(collected) == 120
+    assert len(set(collected)) == 120
+
+
+def test_concurrent_runs_do_not_interfere(api):
+    """并发：两个任务同时执行，结果各自落库、互不串数据"""
+    client, Session = api
+    from backend.services import eval_service
+    import time
+
+    ds_a = _create_dataset(client, name="并发A")
+    ds_b = _create_dataset(client, name="并发B")
+    _upload(client, ds_a["id"], [{"id": "A%02d" % i, "question": "A 问题 %d" % i}
+                                 for i in range(1, 7)])
+    _upload(client, ds_b["id"], [{"id": "B%02d" % i, "question": "B 问题 %d" % i}
+                                 for i in range(1, 7)])
+    _insert_run(Session, "run_conc_a", ds_a["id"], total_cases=6)
+    _insert_run(Session, "run_conc_b", ds_b["id"], total_cases=6)
+
+    def make_ask(tag):
+        def ask(case):
+            time.sleep(0.005)      # 让两个任务真正交错执行
+            return {"answer": "支持7天无理由退款，请放心购买。"}
+        return ask
+
+    async def run_both():
+        await asyncio.gather(
+            eval_service.execute_eval("run_conc_a", qa_func=make_ask("A")),
+            eval_service.execute_eval("run_conc_b", qa_func=make_ask("B")),
+        )
+
+    asyncio.run(run_both())
+
+    from backend.models.run import EvalResult, EvalRun
+
+    db = Session()
+    try:
+        for run_id, prefix in (("run_conc_a", "A"), ("run_conc_b", "B")):
+            run = db.get(EvalRun, run_id)
+            assert run.status == "done"
+            case_ids = [r.case_id for r in db.query(EvalResult).filter_by(
+                run_id=run_id).all()]
+            assert len(case_ids) == 6
+            assert all(cid.startswith(prefix) for cid in case_ids)
+    finally:
+        db.close()

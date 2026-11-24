@@ -16,6 +16,18 @@
 
 ## 快速开始
 
+### 方式一：Docker 一键启动（推荐）
+
+```bash
+cp .env.example .env        # LLM_API_KEY 可留空，评测自动走 mock 降级
+docker compose up -d --build
+docker compose exec api python scripts/import_dataset.py eval_datasets/golden_set.json
+```
+
+打开 `http://localhost`（API 文档 `http://localhost:8000/docs`）。首次构建会下载依赖与 embedding 模型，之后重建复用 `model-cache` 卷。
+
+### 方式二：本地开发（SQLite 零配置）
+
 ```powershell
 $env:HF_ENDPOINT="https://hf-mirror.com"
 $env:ANONYMIZED_TELEMETRY="False"
@@ -40,6 +52,16 @@ python -m uvicorn backend.main:app --port 8000
 产物：`reports/baseline_*_v1.json`、`reports/analysis_golden_v1.json`、`reports/report_v1.html`。
 
 > 未配置 `LLM_API_KEY` 时，Judge 与生成自动降级为规则实现，报告会标注「mock 基线」。
+
+## 功能
+
+| 页面 | 能力 |
+|------|------|
+| 质量概览 | 最近总分/等级、通过率、Badcase 数；能力雷达、版本趋势、分类通过率、版本对比四张图 |
+| 数据集 | 列表、用例分页预览、新建数据集、JSON 上传（重复 ID 自动跳过） |
+| 发起评测 | 数据集 / Prompt 版本 / 模型选择，后台执行 + 进度条 + 取消 |
+| 任务列表 | 状态、进度、总分、耗时，未完成任务自动刷新 |
+| 结果详情 | 指标卡片、与上次评测对比、Badcase 展开对照标准答案、JSON/HTML 报告导出 |
 
 ## 架构
 
@@ -71,7 +93,7 @@ scripts/        基线、校准、分析、报告、性能实验
 templates/      HTML 报告模板
 sql/            数据库 Schema
 docs/           每日设计与实验记录
-tests/          64 条测试
+tests/          66 条测试
 ```
 
 ## 文档
@@ -79,7 +101,21 @@ tests/          64 条测试
 - 架构设计：`docs/day15-architecture.md`
 - 平台后端：`docs/day16-backend-api.md`、`docs/day17-async-tasks.md`
 - 平台前端：`docs/day18-frontend.md`、`docs/day19-dashboard.md`
+- 联调部署：`docs/day20-21-deploy.md`
 - 评测体系：`docs/day6-evaluation-framework.md`、`docs/day11-rag-evaluator.md`
 - 执行引擎：`docs/day12-eval-engine.md`
 - 分析与报告：`docs/day13-analysis.md`、`docs/day14-html-report.md`
 - 周总结：`reports/week2_summary.html`
+
+## 常见问题
+
+| 现象 | 原因与处理 |
+|------|-----------|
+| `docker compose up` 后 api 反复重启 | 通常是数据库未就绪或依赖未装全；看 `docker compose logs api`，确认 db 健康检查通过 |
+| 页面能开但接口 404/跨域 | 生产走 Nginx 同源代理，不跨域；本地直连 8000 端口，跨域已在后端允许 `localhost:5173` |
+| 上传用例返回 413 | Nginx `client_max_body_size` 已调到 10m；更大文件请拆分或改该值 |
+| 报告/结果接口 504 | Nginx `proxy_read_timeout` 已设 300s；数据集特别大时继续调大 |
+| 长任务进度卡在 running | 服务重启会把残留任务置 failed，重跑即可；不要复用请求级 Session 跑后台任务 |
+| 没有 `LLM_API_KEY` | Judge 与生成自动走规则/mock 降级，平台功能不受影响；填 key 后质量指标更准 |
+| embedding 下载慢或失败 | 设置 `HF_ENDPOINT=https://hf-mirror.com`（compose 已默认），并确保 `model-cache` 卷可写 |
+| 80 端口被占用 | 改 `docker-compose.yml` 中 web 的 `ports: "8080:80"`，访问 `http://localhost:8080` |
