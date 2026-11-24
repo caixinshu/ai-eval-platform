@@ -16,7 +16,7 @@ from fastapi.staticfiles import StaticFiles
 
 from backend.config import API_TITLE, API_VERSION, BASE_DIR
 from backend.database import init_db
-from backend.routers import datasets, prompts, runs
+from backend.routers import dashboard, datasets, prompts, runs
 from backend.services.eval_service import recover_stale_runs
 
 # Windows 注册表可能把 .js 映射成 text/plain，浏览器会拒绝执行 ES module，这里强制纠正
@@ -67,6 +67,7 @@ def health():
 app.include_router(datasets.router)
 app.include_router(prompts.router)
 app.include_router(runs.router)
+app.include_router(dashboard.router)
 
 # 前端静态页挂到最后：/api 与 /docs 先匹配，其余交给 frontend/
 app.mount("/", StaticFiles(directory=os.path.join(BASE_DIR, "frontend"), html=True),

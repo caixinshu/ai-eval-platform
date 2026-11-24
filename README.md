@@ -65,20 +65,20 @@ evaluation/     四层评测器
 engine/         执行引擎（并发/重试/缓存/断点）
 analysis/       分组统计 / badcase 聚类 / 版本对比
 backend/        平台后端（FastAPI 接口 + 异步任务）
-frontend/       平台前端（数据集 / 发起评测 / 任务 / 结果页）
+frontend/       平台前端（概览看板 / 数据集 / 发起评测 / 任务 / 结果页）
 eval_datasets/  黄金集 55 · 对抗集 25 · 边界集 17 · 校准集 50
 scripts/        基线、校准、分析、报告、性能实验
 templates/      HTML 报告模板
 sql/            数据库 Schema
 docs/           每日设计与实验记录
-tests/          62 条测试
+tests/          64 条测试
 ```
 
 ## 文档
 
 - 架构设计：`docs/day15-architecture.md`
 - 平台后端：`docs/day16-backend-api.md`、`docs/day17-async-tasks.md`
-- 平台前端：`docs/day18-frontend.md`
+- 平台前端：`docs/day18-frontend.md`、`docs/day19-dashboard.md`
 - 评测体系：`docs/day6-evaluation-framework.md`、`docs/day11-rag-evaluator.md`
 - 执行引擎：`docs/day12-eval-engine.md`
 - 分析与报告：`docs/day13-analysis.md`、`docs/day14-html-report.md`

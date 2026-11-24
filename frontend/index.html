@@ -3,13 +3,169 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI 评测平台</title>
-  <meta http-equiv="refresh" content="0; url=/pages/tasks.html">
+  <title>质量概览 · AI 评测平台</title>
   <link rel="stylesheet" href="/assets/app.css">
 </head>
 <body>
   <div class="wrap">
-    <p class="muted">正在进入任务列表… 如果没有自动跳转，请点击 <a href="/pages/tasks.html">这里</a>。</p>
+    <div class="toolbar">
+      <div>
+        <h2>质量概览</h2>
+        <p class="muted" id="subtitle">最近一次已完成评测的整体质量</p>
+      </div>
+      <div class="toolbar-actions">
+        <a class="btn ghost hidden" id="reportBtn" href="#">查看最新报告</a>
+        <a class="btn primary" href="/pages/new-run.html">发起评测</a>
+      </div>
+    </div>
+
+    <div id="pageError" class="alert hidden"></div>
+    <div id="loading" class="card"><p class="muted" style="margin:0">加载中…</p></div>
+
+    <div id="emptyState" class="card hidden">
+      <h3>还没有已完成的评测</h3>
+      <p class="muted">先发起一次评测，这里会展示总分、能力雷达、版本趋势和分类短板。</p>
+      <a class="btn primary" href="/pages/new-run.html">发起第一次评测</a>
+    </div>
+
+    <div id="dashboard" class="hidden">
+      <div class="cards stat-cards" id="statCards"></div>
+
+      <div class="chart-grid">
+        <div class="card chart-card">
+          <h3>能力雷达 <span class="muted" style="font-weight:400;font-size:12.5px">六项指标 vs 目标基线</span></h3>
+          <div class="chart" id="radarChart"></div>
+          <p class="chart-note" id="radarNote"></p>
+        </div>
+        <div class="card chart-card">
+          <h3>版本趋势 <span class="muted" style="font-weight:400;font-size:12.5px">最近 5 次综合得分</span></h3>
+          <div class="chart" id="trendChart"></div>
+          <p class="chart-note">红色虚线为及格线 80 分。</p>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <h3>分类通过率 <span class="muted" style="font-weight:400;font-size:12.5px">低于 70% 标红</span></h3>
+        <div class="chart" id="categoryChart" style="height:300px"></div>
+        <p class="chart-note hidden" id="categoryEmpty"></p>
+      </div>
+
+      <div class="card chart-card">
+        <h3>版本对比 <span class="muted" id="compareNote" style="font-weight:400;font-size:12.5px"></span></h3>
+        <div class="chart" id="compareChart" style="height:280px"></div>
+        <p class="chart-note hidden" id="compareEmpty"></p>
+      </div>
+    </div>
   </div>
+
+  <script src="/vendor/echarts.min.js"></script>
+  <script type="module">
+    import { api, esc, fmtTime } from "/assets/api.js";
+    import { renderNav } from "/assets/layout.js";
+    import { renderRadar } from "/charts/radar.js";
+    import { renderTrend } from "/charts/trend.js";
+    import { renderCategory } from "/charts/category.js";
+    import { renderCompare } from "/charts/compare.js";
+
+    renderNav("home");
+
+    const el = (id) => document.getElementById(id);
+    const charts = [];
+
+    function gradeClass(score) {
+      if (score >= 80) return "done";
+      if (score >= 70) return "cancelled";
+      return "failed";
+    }
+
+    function renderStats(latest) {
+      const rate = latest.total ? Math.round(latest.passed / latest.total * 1000) / 10 : 0;
+      el("statCards").innerHTML = `
+        <div class="metric-card">
+          <div class="label">最近总分</div>
+          <div class="value">${latest.total_score.toFixed(1)}<small> / 100</small></div>
+          <div class="hint"><span class="badge ${gradeClass(latest.total_score)}">${esc(latest.grade)}</span></div>
+        </div>
+        <div class="metric-card">
+          <div class="label">通过率</div>
+          <div class="value">${rate}<small> %</small></div>
+          <div class="hint">通过 ${latest.passed} / ${latest.total} 条</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">待处理 Badcase</div>
+          <div class="value">${latest.failed}</div>
+          <div class="hint">
+            <a href="/pages/run-detail.html?run_id=${encodeURIComponent(latest.run_id)}">查看失败用例</a>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="label">最近评测</div>
+          <div class="value" style="font-size:15px;line-height:1.5">${esc(latest.prompt_version)}</div>
+          <div class="hint">${esc(latest.dataset || "—")} · ${fmtTime(latest.finished_at)}</div>
+        </div>`;
+    }
+
+    async function load() {
+      try {
+        const data = await api("/api/dashboard");
+        el("loading").classList.add("hidden");
+        if (!data.latest) {
+          el("emptyState").classList.remove("hidden");
+          return;
+        }
+
+        const datasetName = data.dataset ? data.dataset.name : "数据集";
+        el("subtitle").textContent = `${datasetName} · 最近一次已完成评测`;
+        const reportBtn = el("reportBtn");
+        reportBtn.href = `/pages/run-detail.html?run_id=${encodeURIComponent(data.latest.run_id)}`;
+        reportBtn.classList.remove("hidden");
+        el("dashboard").classList.remove("hidden");
+
+        renderStats(data.latest);
+
+        charts.push(renderRadar(el("radarChart"), data.radar.indicators));
+        el("radarNote").textContent = data.radar.missing.length
+          ? `暂无数据：${data.radar.missing.join("、")}（雷达图对应方向留空，不伪造数值）`
+          : "六项指标均已采集。";
+
+        if (data.trend.length) {
+          charts.push(renderTrend(el("trendChart"), data.trend));
+        }
+
+        if (data.categories.length) {
+          charts.push(renderCategory(el("categoryChart"), data.categories));
+        } else {
+          el("categoryChart").classList.add("hidden");
+          el("categoryEmpty").textContent = "最近一次评测没有可统计的分类。";
+          el("categoryEmpty").classList.remove("hidden");
+        }
+
+        if (data.compare) {
+          const chart = renderCompare(el("compareChart"), data.compare);
+          el("compareNote").textContent =
+            `本次 ${data.latest.prompt_version} vs 基线 ${data.compare.baseline_version}`;
+          if (chart) {
+            charts.push(chart);
+          } else {
+            el("compareChart").classList.add("hidden");
+            el("compareEmpty").textContent = "两次评测没有共同指标，暂无法对比。";
+            el("compareEmpty").classList.remove("hidden");
+          }
+        } else {
+          el("compareChart").classList.add("hidden");
+          el("compareEmpty").textContent = "这是该数据集第一次评测，积累第二次后自动出现对比。";
+          el("compareEmpty").classList.remove("hidden");
+        }
+
+        window.addEventListener("resize", () => charts.forEach((chart) => chart.resize()));
+      } catch (err) {
+        el("loading").classList.add("hidden");
+        el("pageError").textContent = `概览加载失败：${err.message}`;
+        el("pageError").classList.remove("hidden");
+      }
+    }
+
+    load();
+  </script>
 </body>
 </html>

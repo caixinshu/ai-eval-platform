@@ -319,11 +319,12 @@ def test_recover_stale_running_runs(api):
 # ---------------- Day 18：前端页面 ----------------
 
 def test_frontend_pages_served(api):
-    """静态页由后端统一托管：首页跳转页、页面、样式与脚本都可访问"""
+    """静态页由后端统一托管：首页看板、页面、样式与脚本都可访问"""
     client, _ = api
     index = client.get("/")
     assert index.status_code == 200
-    assert "tasks.html" in index.text
+    assert "质量概览" in index.text
+    assert "/vendor/echarts.min.js" in index.text
 
     for path, text in (("/pages/datasets.html", "数据集管理"),
                        ("/pages/new-run.html", "发起评测"),
@@ -339,6 +340,8 @@ def test_frontend_pages_served(api):
     # Windows 注册表可能把 .js 映射成 text/plain，浏览器会拒绝执行 ES module
     assert "javascript" in js.headers["content-type"]
     assert client.get("/poll.js").status_code == 200
+    assert client.get("/vendor/echarts.min.js").status_code == 200
+    assert client.get("/charts/radar.js").status_code == 200
 
 
 def test_results_include_ground_truth(api, monkeypatch):
@@ -360,3 +363,73 @@ def test_results_include_ground_truth(api, monkeypatch):
 
     results = client.get("/api/runs/%s/results" % run_id).json()
     assert results["items"][0]["ground_truth"] == "支持7天无理由退款"
+
+
+# ---------------- Day 19：质量概览看板 ----------------
+
+def _dashboard_dataset(client):
+    ds = _create_dataset(client, name="看板集")
+    _upload(client, ds["id"], [
+        {"id": "c001", "question": "退款政策是什么", "category": "退款",
+         "ground_truth": "支持7天无理由退款"},
+        {"id": "c002", "question": "多久到账", "category": "物流",
+         "ground_truth": "1-3个工作日到账",
+         "expected_behavior": {"must_contain": ["到账"]}},
+    ])
+    return ds
+
+
+def test_dashboard_aggregates_latest_run(api, monkeypatch):
+    """看板聚合：最近评测、雷达缺失值、趋势顺序、分类短板、基线对比"""
+    client, _ = api
+    from backend.services import eval_service
+
+    monkeypatch.setattr(eval_service, "_semantic_score", lambda answer, truth: 1.0)
+    answer = {"current": "支持7天无理由退款，请放心购买并保留凭证。"}
+
+    def fake_ask(case):
+        return {"answer": answer["current"], "contexts": []}
+
+    monkeypatch.setattr(eval_service, "ask_question", fake_ask)
+    ds = _dashboard_dataset(client)
+
+    run_v1 = client.post("/api/runs", json={"dataset_id": ds["id"],
+                                            "prompt_version": "v1"}).json()["run_id"]
+    data = client.get("/api/dashboard?dataset_id=" + ds["id"]).json()
+
+    assert data["latest"]["run_id"] == run_v1
+    assert data["latest"]["total"] == 2
+    assert data["latest"]["failed"] == 1
+    assert data["badcase_count"] == 1
+    assert len(data["trend"]) == 1
+    assert data["compare"] is None
+    # 分类按通过率升序，最差的排前面
+    assert data["categories"][0]["category"] == "物流"
+    assert data["categories"][0]["pass_rate"] == 0.0
+    # 未采集的指标返回 null，不伪造 0
+    assert "忠实度" in data["radar"]["missing"]
+    assert "安全性" in data["radar"]["missing"]
+    values = {item["key"]: item["value"] for item in data["radar"]["indicators"]}
+    assert values["correctness"] == 1.0
+    assert values["performance"] is not None
+
+    answer["current"] = "支持7天无理由退款，1-3个工作日到账。"
+    run_v2 = client.post("/api/runs", json={"dataset_id": ds["id"],
+                                            "prompt_version": "v2"}).json()["run_id"]
+    data = client.get("/api/dashboard?dataset_id=" + ds["id"]).json()
+
+    assert data["latest"]["run_id"] == run_v2
+    assert data["latest"]["total_score"] == 100.0
+    assert [point["label"] for point in data["trend"]] == ["v1", "v2"]
+    assert data["compare"]["baseline_version"] == "v1"
+    assert data["compare"]["metrics"]["rule_score"]["baseline"] == 0.9
+
+
+def test_dashboard_empty(api):
+    """没有任何完成任务时返回空看板，而不是报错"""
+    client, _ = api
+    data = client.get("/api/dashboard").json()
+    assert data["latest"] is None
+    assert data["trend"] == []
+    assert data["categories"] == []
+    assert data["compare"] is None

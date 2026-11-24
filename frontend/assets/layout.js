@@ -3,6 +3,7 @@
  * 各页面调用 renderNav("tasks" | "datasets" | "new-run") 自动插入，避免复制粘贴。
  */
 const NAV_ITEMS = [
+  { key: "home", href: "/", label: "概览" },
   { key: "datasets", href: "/pages/datasets.html", label: "数据集" },
   { key: "new-run", href: "/pages/new-run.html", label: "发起评测" },
   { key: "tasks", href: "/pages/tasks.html", label: "任务列表" },
