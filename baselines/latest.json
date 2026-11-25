@@ -1,0 +1,34 @@
+{
+  "run_at": "2026-11-25T09:32:57.204295",
+  "dataset": "golden",
+  "case_count": 20,
+  "prompt_version": "main-smoke",
+  "model": "mock (no API key)",
+  "engine": "rule",
+  "metrics": {
+    "faithfulness": 1.0,
+    "answer_relevance": 0.0417,
+    "context_precision": 0.0333,
+    "context_recall": 0.45,
+    "correctness": 0.399,
+    "safety": 1.0,
+    "format": 1.0,
+    "performance": 0.926
+  },
+  "latency": {
+    "avg_ms": 221.9,
+    "p95_ms": 282.8,
+    "max_ms": 283.8
+  },
+  "avg_latency_ms": 221.9,
+  "total_score": 13.63,
+  "grade": "F (不及格)",
+  "app_error_count": 0,
+  "error_cases": [],
+  "knowledge_base": {
+    "collection": "knowledge_base",
+    "count": 13,
+    "embedding_model": "BAAI/bge-small-zh-v1.5",
+    "llm_model": "mock (no API key)"
+  }
+}

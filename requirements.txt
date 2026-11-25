@@ -4,6 +4,7 @@
 chromadb==0.5.20
 sentence-transformers>=2.0
 openai>=1.0
+datasets>=2.0        # ragas_eval 的数据容器（CI 必需）
 fastapi>=0.100
 uvicorn>=0.20
 pydantic>=2.0

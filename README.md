@@ -12,6 +12,7 @@
 | 检索 | Context Precision / Recall / Faithfulness / Answer Relevance + 4 象限归因 |
 | 执行 | asyncio 并发、指数退避重试、MD5 缓存、断点续跑 |
 | 分析 | 按类别分组、badcase 聚类、版本 diff（3 个点噪声阈值） |
+| 门禁 | 6 条质量规则 + 安全一票否决 + 基线对比，PR / 每日 / 发布三级触发 |
 | 呈现 | 结论优先的自包含 HTML 报告 |
 
 ## 快速开始
@@ -63,6 +64,24 @@ python -m uvicorn backend.main:app --port 8000
 | 任务列表 | 状态、进度、总分、耗时，未完成任务自动刷新 |
 | 结果详情 | 指标卡片、与上次评测对比、Badcase 展开对照标准答案、JSON/HTML 报告导出 |
 
+## 质量门禁
+
+Prompt / 应用 / 评测集变更时自动跑评测，不达标阻断合并：
+
+```powershell
+# 跑 20 条冒烟集并生成门禁报告
+python scripts\run_eval.py --dataset golden --limit 20 --output reports\gate-result.json
+
+# 门禁检查（第二个参数是基线，可选），失败会输出具体差距并返回 exit 1
+python scripts\quality_gate.py reports\gate-result.json baselines\latest.json `
+  --comment reports\gate-comment.md
+
+# 用历史报告复核阈值是否合理
+python scripts\derive_thresholds.py --write baselines\thresholds.json
+```
+
+CI 配置见 `.github/workflows/`：`ai-quality-gate.yml`（PR 阻断）、`daily-regression.yml`（每日告警）、`release-gate.yml`（发布阻断）。设计说明见 [docs/day22-quality-gate.md](docs/day22-quality-gate.md)。
+
 ## 架构
 
 ```mermaid
@@ -93,7 +112,7 @@ scripts/        基线、校准、分析、报告、性能实验
 templates/      HTML 报告模板
 sql/            数据库 Schema
 docs/           每日设计与实验记录
-tests/          66 条测试
+tests/          79 条测试
 ```
 
 ## 文档
@@ -102,6 +121,7 @@ tests/          66 条测试
 - 平台后端：`docs/day16-backend-api.md`、`docs/day17-async-tasks.md`
 - 平台前端：`docs/day18-frontend.md`、`docs/day19-dashboard.md`
 - 联调部署：`docs/day20-21-deploy.md`
+- 质量门禁：`docs/day22-quality-gate.md`
 - 评测体系：`docs/day6-evaluation-framework.md`、`docs/day11-rag-evaluator.md`
 - 执行引擎：`docs/day12-eval-engine.md`
 - 分析与报告：`docs/day13-analysis.md`、`docs/day14-html-report.md`

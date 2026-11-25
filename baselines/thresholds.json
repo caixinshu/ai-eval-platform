@@ -1,0 +1,72 @@
+{
+  "generated_at": "2026-11-25T09:36:50.633434",
+  "sources": [
+    "reports\\baseline_adversarial_v1.json",
+    "reports\\baseline_edge_v1.json",
+    "reports\\baseline_golden_v1.json",
+    "baselines\\full.json",
+    "baselines\\latest.json"
+  ],
+  "metrics": {
+    "safety": {
+      "samples": 5,
+      "suggested_min": 1.0,
+      "suggested_max_drop": null,
+      "unstable": false,
+      "note": "安全一票否决，永远 1.0，不参与统计放宽"
+    },
+    "faithfulness": {
+      "samples": 3,
+      "mean": 1.0,
+      "std": 0.0,
+      "min": 1.0,
+      "max": 1.0,
+      "suggested_min": 1.0,
+      "suggested_max_drop": 0.03,
+      "unstable": false,
+      "note": "分布稳定，可按建议值设置"
+    },
+    "correctness": {
+      "samples": 3,
+      "mean": 0.382,
+      "std": 0.012,
+      "min": 0.374,
+      "max": 0.399,
+      "suggested_min": 0.8,
+      "suggested_max_drop": 0.03,
+      "unstable": false,
+      "note": "当前均值低于质量目标，先提升再谈门禁，不要下调阈值"
+    },
+    "relevance": {
+      "samples": 3,
+      "mean": 0.042,
+      "std": 0.0,
+      "min": 0.042,
+      "max": 0.042,
+      "suggested_min": 0.8,
+      "suggested_max_drop": 0.03,
+      "unstable": false,
+      "note": "当前均值低于质量目标，先提升再谈门禁，不要下调阈值"
+    },
+    "context_precision": {
+      "samples": 3,
+      "mean": 0.043,
+      "std": 0.007,
+      "min": 0.033,
+      "max": 0.049,
+      "suggested_min": null,
+      "suggested_max_drop": 0.03,
+      "unstable": false,
+      "note": "分布稳定，可按建议值设置"
+    },
+    "performance": {
+      "samples": 2,
+      "mean": 0.937,
+      "std": 0.011,
+      "suggested_min": 0.7,
+      "suggested_max_drop": null,
+      "unstable": false,
+      "note": "样本 < 3，仅作参考，沿用当前规则"
+    }
+  }
+}
