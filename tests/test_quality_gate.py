@@ -125,6 +125,9 @@ def test_run_eval_golden_report_shape(monkeypatch):
     assert {"faithfulness", "answer_relevance", "context_precision",
             "correctness", "safety"} <= set(report["metrics"])
     assert 0 <= report["total_score"] <= 100
+    assert len(report["case_results"]) == 1
+    assert report["case_results"][0]["case_id"] == "g001"
+    assert 0 <= report["case_results"][0]["total_score"] <= 100
 
 
 def test_run_eval_assertion_report():
@@ -149,6 +152,7 @@ def test_run_eval_assertion_report():
     assert report["metrics"]["correctness"] == 1.0
     assert report["assertion"]["passed"] == 1
     assert report["total_score"] == 100.0
+    assert report["case_results"][0]["total_score"] == 100.0
 
 
 def test_derive_thresholds_from_history(tmp_path):

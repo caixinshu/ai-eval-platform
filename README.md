@@ -13,6 +13,7 @@
 | 执行 | asyncio 并发、指数退避重试、MD5 缓存、断点续跑 |
 | 分析 | 按类别分组、badcase 聚类、版本 diff（3 个点噪声阈值） |
 | 门禁 | 6 条质量规则 + 安全一票否决 + 基线对比，PR / 每日 / 发布三级触发 |
+| 灰度 | 逐用例 Prompt 差异、按 user_id 稳定分流、5 项指标自动回滚 |
 | 呈现 | 结论优先的自包含 HTML 报告 |
 
 ## 快速开始
@@ -63,6 +64,7 @@ python -m uvicorn backend.main:app --port 8000
 | 发起评测 | 数据集 / Prompt 版本 / 模型选择，后台执行 + 进度条 + 取消 |
 | 任务列表 | 状态、进度、总分、耗时，未完成任务自动刷新 |
 | 结果详情 | 指标卡片、与上次评测对比、Badcase 展开对照标准答案、JSON/HTML 报告导出 |
+| 线上监控 | 24h 抽样均分/差评率、问题分布、30 天趋势、业务线明细、badcase 回流进度 |
 
 ## 质量门禁
 
@@ -81,6 +83,40 @@ python scripts\derive_thresholds.py --write baselines\thresholds.json
 ```
 
 CI 配置见 `.github/workflows/`：`ai-quality-gate.yml`（PR 阻断）、`daily-regression.yml`（每日告警）、`release-gate.yml`（发布阻断）。设计说明见 [docs/day22-quality-gate.md](docs/day22-quality-gate.md)。
+
+## Prompt 回归与灰度
+
+门禁回答「能不能进」，差异分析回答「具体改好了哪些、改坏了哪些」：
+
+```powershell
+# 逐用例对比两个版本（输入可以是 run_eval 报告或平台结果 JSON）
+python scripts\prompt_diff.py baselines\latest.json reports\candidate.json `
+  --label-baseline v1.2.0 --label-current v1.3.0 `
+  --json reports\prompt-diff.json --markdown reports\prompt-diff.md
+```
+
+- `analysis/prompt_diff.py`：improved / degraded / unchanged + 分类归因 + 均值掩盖提示
+- `app/ab_router.py`：按 user_id 的 MD5 分桶稳定灰度（默认 5%）
+- `app/gray_guard.py`：在线分数、负反馈率、拒答率、P95 延迟、Token 成本 5 项指标，越线返回回滚建议
+
+完整流程与灰度监控口径见 [docs/day23-prompt-regression.md](docs/day23-prompt-regression.md)。
+
+## 线上监控与 badcase 回流
+
+真实流量按 2% 抽样评测，用户差评自动归入 5 类问题，待标注用例人工补标准答案后才进入回归：
+
+```powershell
+# 收集近 7 天差评，同类问题至少出现 3 次才回流
+python scripts\reflow_badcases.py --days 7 --min-count 3
+
+# 人工确认：补 ground_truth 后转 verified=true
+python scripts\reflow_badcases.py --verify fresh_ab12cd34 --ground-truth "标准答案"
+
+# 查看回流进度
+python scripts\reflow_badcases.py --stats
+```
+
+看板入口 `/pages/monitor.html`；接口 `POST /api/feedback`、`POST /api/monitor/samples`、`GET /api/monitor/overview`。设计说明见 [docs/day24-online-monitoring.md](docs/day24-online-monitoring.md)。
 
 ## 架构
 
@@ -106,13 +142,14 @@ evaluation/     四层评测器
 engine/         执行引擎（并发/重试/缓存/断点）
 analysis/       分组统计 / badcase 聚类 / 版本对比
 backend/        平台后端（FastAPI 接口 + 异步任务）
-frontend/       平台前端（概览看板 / 数据集 / 发起评测 / 任务 / 结果页）
+monitor/        线上抽样 / 反馈归类 / badcase 回流
+frontend/       平台前端（概览看板 / 数据集 / 发起评测 / 任务 / 结果页 / 线上监控）
 eval_datasets/  黄金集 55 · 对抗集 25 · 边界集 17 · 校准集 50
 scripts/        基线、校准、分析、报告、性能实验
 templates/      HTML 报告模板
 sql/            数据库 Schema
 docs/           每日设计与实验记录
-tests/          79 条测试
+tests/          112 条测试
 ```
 
 ## 文档
@@ -122,6 +159,8 @@ tests/          79 条测试
 - 平台前端：`docs/day18-frontend.md`、`docs/day19-dashboard.md`
 - 联调部署：`docs/day20-21-deploy.md`
 - 质量门禁：`docs/day22-quality-gate.md`
+- Prompt 回归与灰度：`docs/day23-prompt-regression.md`
+- 线上监控与回流：`docs/day24-online-monitoring.md`
 - 评测体系：`docs/day6-evaluation-framework.md`、`docs/day11-rag-evaluator.md`
 - 执行引擎：`docs/day12-eval-engine.md`
 - 分析与报告：`docs/day13-analysis.md`、`docs/day14-html-report.md`

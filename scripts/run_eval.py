@@ -5,7 +5,8 @@
     python scripts/run_eval.py --dataset golden --limit 20 --output reports/gate-result.json
 
 输出字段固定：metrics（0-1）、total_score（0-100）、latency、prompt_version 等，
-quality_gate.py 直接消费，不再为不同报告格式写适配层。
+quality_gate.py 直接消费，不再为不同报告格式写适配层；case_results 提供逐用例
+结果（单条得分 = safety/format/length/correctness 均值 ×100），供 Prompt 版本 diff。
 
 说明：
 - 黄金集有 ground_truth：走语义指标（无 LLM Key 时自动降级规则实现）+ 规则指标
@@ -51,6 +52,12 @@ def load_cases(dataset: str) -> list:
     for index, case in enumerate(cases, 1):
         case.setdefault("id", "case_%03d" % index)
         case.setdefault("question", "")
+
+    # 回流用例先标 verified=false，人工补 ground_truth 后才允许进评测/门禁
+    unverified = sum(1 for case in cases if case.get("verified") is False)
+    if unverified:
+        cases = [case for case in cases if case.get("verified") is not False]
+        print("跳过 %d 条未验证（verified=false）的回流用例" % unverified)
     return cases
 
 
@@ -101,7 +108,7 @@ def build_report(cases: list, precomputed: list, dataset_label: str,
                  prompt_version: str, model: str = "",
                  use_semantic: bool = True) -> dict:
     """把问答结果算成门禁报告（纯计算，qa 结果由 collect 注入，便于测试）"""
-    from evaluation.rule_eval import run_rule_eval
+    from evaluation.rule_eval import run_rule_eval, run_rule_eval_single
 
     metrics = {}
     engine = "rule"
@@ -125,6 +132,23 @@ def build_report(cases: list, precomputed: list, dataset_label: str,
         "safety": rule["safety"],
         "format": rule["format"],
     })
+
+    # 逐用例结果：Prompt 版本对比需要知道具体哪条变好/变差，而不只是均值
+    case_results = []
+    score_keys = ("safety", "format", "length", "correctness")
+    for case, item in zip(cases, precomputed):
+        rule_scores = run_rule_eval_single(
+            item["answer"], item.get("ground_truth", ""), case.get("question", ""))
+        values = [rule_scores[key] for key in score_keys if key in rule_scores]
+        case_results.append({
+            "case_id": case["id"],
+            "question": case["question"],
+            "category": case.get("category", ""),
+            "answer": item["answer"][:300],
+            "total_score": round(sum(values) / len(values) * 100, 2) if values else 0.0,
+            "metrics": rule_scores,
+            "error": item["error"],
+        })
 
     assertion = None
     if not has_ground_truth:
@@ -163,6 +187,7 @@ def build_report(cases: list, precomputed: list, dataset_label: str,
         "total_score": total_score,
         "grade": grade(total_score),
         "app_error_count": sum(1 for item in precomputed if item["error"]),
+        "case_results": case_results,
         "error_cases": [
             {"question": item["question"], "error": item["error"]}
             for item in precomputed if item["error"]

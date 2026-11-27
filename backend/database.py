@@ -27,7 +27,7 @@ def get_db():
 
 def init_db():
     """开发期自动建表；生产用 sql/schema.sql 迁移"""
-    from backend.models import dataset, prompt, run  # noqa: F401  注册模型
+    from backend.models import dataset, feedback, prompt, run  # noqa: F401  注册模型
     Base.metadata.create_all(engine)
     _migrate_sqlite()
 

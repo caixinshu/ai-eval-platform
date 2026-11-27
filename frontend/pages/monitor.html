@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>线上监控 · AI 评测平台</title>
+  <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="toolbar">
+      <div>
+        <h2>线上质量监控</h2>
+        <p class="muted">抽样评测 + 用户反馈 + badcase 回流，观察真实流量下的质量变化</p>
+      </div>
+      <div class="toolbar-actions">
+        <button class="btn ghost" id="refreshBtn">刷新</button>
+        <a class="btn primary" href="/pages/new-run.html">发起离线评测</a>
+      </div>
+    </div>
+
+    <div id="pageError" class="alert hidden"></div>
+    <div id="loading" class="card"><p class="muted" style="margin:0">加载中…</p></div>
+
+    <div id="monitor" class="hidden">
+      <div class="cards stat-cards" id="statCards"></div>
+
+      <div class="chart-grid">
+        <div class="card chart-card">
+          <h3>质量总览 <span class="muted" style="font-weight:400;font-size:12.5px">近 24 小时抽样均分</span></h3>
+          <div class="chart" id="hourlyChart"></div>
+          <p class="chart-note hidden" id="hourlyEmpty">近 24 小时暂无抽样数据，采样器命中后调用 <code>/api/monitor/samples</code> 写入。</p>
+          <p class="chart-note">差评率 = 差评反馈 / 全部反馈；没有反馈的小时留空，不按 0 计算。</p>
+        </div>
+        <div class="card chart-card">
+          <h3>问题分布 <span class="muted" style="font-weight:400;font-size:12.5px">近 7 天差评归类</span></h3>
+          <div class="chart" id="issueChart"></div>
+          <p class="chart-note hidden" id="issueEmpty">近 7 天还没有差评，或反馈尚未写入。</p>
+          <p class="chart-note">5 类：编造 / 答非所问 / 不完整 / 格式 / 语气，映射不到进 other。</p>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <h3>质量趋势 <span class="muted" style="font-weight:400;font-size:12.5px">近 30 天抽样均分</span></h3>
+        <div class="chart" id="trendChart" style="height:300px"></div>
+        <p class="chart-note hidden" id="trendEmpty">近 30 天没有抽样评测数据。</p>
+        <p class="chart-note">橙色虚线为及格线 80 分；没有抽样的小时/天留空。</p>
+      </div>
+
+      <div class="chart-grid">
+        <div class="card chart-card">
+          <h3>各业务线质量 <span class="muted" style="font-weight:400;font-size:12.5px">抽样均分</span></h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>业务线</th><th>抽样数</th><th>均分</th><th style="width:38%">水平</th></tr></thead>
+              <tbody id="bizRows"><tr><td colspan="4" class="empty">暂无抽样数据</td></tr></tbody>
+            </table>
+          </div>
+          <p class="chart-note">业务线由写入抽样结果时传入的 <code>biz_line</code> 决定。</p>
+        </div>
+
+        <div class="card chart-card">
+          <h3>回流进度 <span class="muted" style="font-weight:400;font-size:12.5px">待标注 / 已入集</span></h3>
+          <div class="progress-line" style="margin:8px 0 12px">
+            <div class="progress"><i id="reflowBar" style="width:0%"></i></div>
+            <span class="progress-text" id="reflowText">0 / 0</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>问题分类</th><th>共</th><th>待标注</th><th>已入集</th></tr></thead>
+              <tbody id="reflowRows"><tr><td colspan="4" class="empty">还没有回流用例</td></tr></tbody>
+            </table>
+          </div>
+          <p class="chart-note">只有人工补完 <code>ground_truth</code> 且 <code>verified=true</code> 的用例才会进入回归与门禁。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/vendor/echarts.min.js"></script>
+  <script type="module">
+    import { api, esc } from "/assets/api.js";
+    import { renderNav } from "/assets/layout.js";
+    import { renderHourly, renderIssues, renderTrend } from "/charts/monitor.js";
+
+    renderNav("monitor");
+
+    const el = (id) => document.getElementById(id);
+    const charts = [];
+
+    function fmtScore(score) {
+      return score === null || score === undefined ? "—" : Number(score).toFixed(1);
+    }
+
+    function renderStats(data) {
+      const quality = data.quality;
+      const topIssue = data.issues.items[0];
+      el("statCards").innerHTML = `
+        <div class="metric-card">
+          <div class="label">24h 抽样均分</div>
+          <div class="value">${fmtScore(quality.avg_score_24h)}<small> / 100</small></div>
+          <div class="hint">抽样 ${quality.sample_count_24h} 条</div>
+        </div>
+        <div class="metric-card ${quality.bad_rate_24h !== null && quality.bad_rate_24h > 0.1 ? "warn" : ""}">
+          <div class="label">24h 差评率</div>
+          <div class="value">${quality.bad_rate_24h === null ? "—" : `${(quality.bad_rate_24h * 100).toFixed(1)}%`}</div>
+          <div class="hint">反馈 ${quality.feedback_count_24h} 条 / 差评 ${quality.bad_count_24h} 条</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">近 7 天 badcase</div>
+          <div class="value">${data.issues.total}</div>
+          <div class="hint">${topIssue ? `最多：${esc(topIssue.category)} ${topIssue.count} 条` : "暂无差评"}</div>
+        </div>
+        <div class="metric-card ${data.reflow.pending ? "warn" : ""}">
+          <div class="label">待标注回流用例</div>
+          <div class="value">${data.reflow.pending}</div>
+          <div class="hint">已入集 ${data.reflow.verified} / 共 ${data.reflow.total}</div>
+        </div>`;
+    }
+
+    function renderBizRows(categories) {
+      if (!categories.length) {
+        el("bizRows").innerHTML = '<tr><td colspan="4" class="empty">暂无抽样数据</td></tr>';
+        return;
+      }
+      el("bizRows").innerHTML = categories.map((item) => {
+        const width = Math.max(0, Math.min(100, Number(item.avg_score || 0)));
+        return `<tr>
+          <td>${esc(item.biz_line)}</td>
+          <td>${item.sample_count}</td>
+          <td>${fmtScore(item.avg_score)}</td>
+          <td><div class="progress"><i style="width:${width}%"></i></div></td>
+        </tr>`;
+      }).join("");
+    }
+
+    function renderReflow(reflow) {
+      const total = reflow.total || 0;
+      const percent = total ? Math.round((reflow.verified / total) * 100) : 0;
+      el("reflowBar").style.width = `${percent}%`;
+      el("reflowText").textContent = `${reflow.verified} / ${total} 已入集`;
+
+      const entries = Object.entries(reflow.by_category || {});
+      el("reflowRows").innerHTML = entries.length ? entries.map(([category, item]) => `
+        <tr>
+          <td>${esc(category)}</td>
+          <td>${item.total}</td>
+          <td>${item.pending}</td>
+          <td>${item.verified}</td>
+        </tr>`).join("") : '<tr><td colspan="4" class="empty">还没有回流用例</td></tr>';
+    }
+
+    async function load() {
+      try {
+        const data = await api("/api/monitor/overview?days=30");
+        el("loading").classList.add("hidden");
+        el("monitor").classList.remove("hidden");
+        el("pageError").classList.add("hidden");
+
+        renderStats(data);
+        renderBizRows(data.categories);
+        renderReflow(data.reflow);
+
+        if (data.quality.sample_count_24h > 0) {
+          charts.push(renderHourly(el("hourlyChart"), data.hourly));
+        } else {
+          el("hourlyChart").classList.add("hidden");
+          el("hourlyEmpty").classList.remove("hidden");
+        }
+
+        if (data.issues.total > 0) {
+          const chart = renderIssues(el("issueChart"), data.issues);
+          if (chart) charts.push(chart);
+        } else {
+          el("issueChart").classList.add("hidden");
+          el("issueEmpty").classList.remove("hidden");
+        }
+
+        if (data.trend.some((item) => item.sample_count > 0)) {
+          charts.push(renderTrend(el("trendChart"), data.trend));
+        } else {
+          el("trendChart").classList.add("hidden");
+          el("trendEmpty").classList.remove("hidden");
+        }
+
+        window.addEventListener("resize", () => charts.forEach((chart) => chart.resize()));
+      } catch (error) {
+        el("loading").classList.add("hidden");
+        el("pageError").textContent = error.message || "加载失败";
+        el("pageError").classList.remove("hidden");
+      }
+    }
+
+    el("refreshBtn").addEventListener("click", () => window.location.reload());
+    load();
+  </script>
+</body>
+</html>

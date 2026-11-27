@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { key: "datasets", href: "/pages/datasets.html", label: "数据集" },
   { key: "new-run", href: "/pages/new-run.html", label: "发起评测" },
   { key: "tasks", href: "/pages/tasks.html", label: "任务列表" },
+  { key: "monitor", href: "/pages/monitor.html", label: "线上监控" },
 ];
 
 export function renderNav(activeKey) {
